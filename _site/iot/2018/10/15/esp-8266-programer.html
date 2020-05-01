@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/static/img/favicon.ico" />
+    
+    <!-- realfavicongenerator -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/static/img/favicons/site.webmanifest">
+    <link rel="mask-icon" href="/static/img/favicons/safari-pinned-tab.svg" color="#2d4f59">
+    <link rel="shortcut icon" href="/static/img/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-config" content="/static/img/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Programing ESP-8266 - Software Developer Blog</title>
+    <meta name="author" content="Francisco Dorado" />
+    <meta name="description" content="Programing ESP-8266" />
+    <meta name="keywords" content="Programing ESP-8266, Software Developer Blog, iot" />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+    <meta content="" property="fb:app_id">
+    <meta content="Software Developer Blog" property="og:site_name">
+
+    
+
+    
+      <meta content="Programing ESP-8266" property="og:title">
+      <meta content="article" property="og:type">
+    
+
+    
+      <meta content="Francisco Dorado - Software Developer" property="og:description">
+    
+
+    
+      <meta content="http://localhost:4000/iot/2018/10/15/esp-8266-programer.html" property="og:url">
+    
+
+    
+      <meta content="2018-10-15T02:00:00+02:00" property="article:published_time">
+      <meta content="http://localhost:4000/about/" property="article:author">
+    
+
+    
+      <meta content="http://localhost:4000/static/img/avatar.jpg" property="og:image">
+    
+
+    
+      
+        <meta content="iot" property="article:section">
+      
+    
+
+    
+      
+        <meta content="iot" property="article:tag">
+      
+        <meta content="arduino" property="article:tag">
+      
+        <meta content="esp8266" property="article:tag">
+      
+        <meta content="home assistant" property="article:tag">
+      
+        <meta content="FT232RL" property="article:tag">
+      
+        <meta content="ESP-8266" property="article:tag">
+      
+    
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@frandorado">
+    <meta name="twitter:creator" content="@frandorado">
+
+    
+      <meta name="twitter:title" content="Programing ESP-8266">
+    
+
+    
+      <meta name="twitter:url" content="http://localhost:4000/iot/2018/10/15/esp-8266-programer.html">
+    
+
+    
+      <meta name="twitter:description" content="Francisco Dorado - Software Developer">
+    
+
+    
+
+    <!-- Font awesome icons -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+    <!-- syntax highlighting CSS -->
+    <link rel="stylesheet" href="/static/css/syntax.css">
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300italic,300,400italic,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/super-search.css">
+    <link rel="stylesheet" href="/static/css/thickbox.css">
+    <link rel="stylesheet" href="/static/css/projects.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+
+    
+  </head>
+  <body>
+    <div class="container">
+      <div class="col-sm-3">
+        <div class="fixed-condition">
+          <a href="/"><img class="profile-avatar" src="/static/img/avatar.jpg" height="75px" width="75px" /></a>
+          <h1 class="author-name">Francisco Dorado</h1>
+          
+            <div class="profile-about">
+              I am a software developer focused on back-end and specialized in Java and Spring.
+            </div>
+          
+          <div class="social">
+            <ul>
+              
+                <li><a href="https://twitter.com/frandorado" target="_blank"><i class="fa fa-twitter"></i></a></li>
+              
+                <li><a href="https://www.linkedin.com/in/franciscodorado" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+              
+                <li><a href="https://github.com/frandorado" target="_blank"><i class="fa fa-github"></i></a></li>
+              
+            </ul>
+          </div>
+          <div class="search" id="js-search">
+            <input type="text" placeholder="(sitemap)~$ type to search" class="search__input form-control" id="js-search__input">
+            <ul class="search__results" id="js-search__results"></ul>
+          </div>
+          <hr />
+          <ul class="sidebar-nav">
+            <strong>Navigation</strong>
+            <li><a href="/">Home</a></li>
+            
+              <li><a class="about" href="/about/">About Me</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/cv/resume">CV</a></li>
+              
+              
+                <ul class="sidebar-nav">
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/work-experience">Work Experience</a></li>
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/skills">Skills</a></li>
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/education-training">Education and Training</a></li>
+                  
+                </ul>
+              
+              
+            
+              <li><a class="about" href="/projects/">Projects</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/statistics/">Statistics</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/feed.xml">Feed RSS</a></li>
+              
+              
+              
+            
+          </ul>
+          <br />
+          <img src="https://doradofran.pythonanywhere.com/count/tag.svg?url=http://localhost:4000/iot/2018/10/15/esp-8266-programer.html" alt="Hits">
+        </div>
+        <!-- end /.fixed-condition -->
+      </div>
+      <div class="col-sm-8 col-offset-1 main-layout">
+        <header class="post-header">
+  <h1 class="post-title">Programing ESP-8266</h1>
+  <h5>
+    <span class="reading-time" title="Estimated read time">
+  
+  
+    (Reading time: ~1 min)
+  
+</span>
+  </h5>
+</header>
+
+<span class="time">15 Oct 2018</span>
+
+  <span class="categories">
+    &raquo; <a href="/category/iot">iot</a>
+  </span>
+
+
+
+
+
+
+<div class="content">
+  <div class="post"><p>On the web we can find differents ways to program a ESP-8266 but in this post I’ll show you what way it works for me.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<ul>
+  <li>You will need a TTL to USB interface (for example FTDI FT232RL) or you could use the Arduino Uno. In this post we’ll use the Arduino UNO.</li>
+  <li>The Arduino IDE configured for working with ESP-8266. There are a lot of tutorials about this.</li>
+</ul>
+
+<h2 id="esp-8266-in-programing-mode">ESP-8266 in programing mode</h2>
+
+<p>Steps to connect:</p>
+
+<ol>
+  <li>Connect <code class="language-plaintext highlighter-rouge">TX</code> to <code class="language-plaintext highlighter-rouge">RX</code></li>
+  <li>Connect <code class="language-plaintext highlighter-rouge">RX</code> to <code class="language-plaintext highlighter-rouge">TX</code></li>
+  <li>Connect <code class="language-plaintext highlighter-rouge">VCC</code> and <code class="language-plaintext highlighter-rouge">CH-PD</code> to <code class="language-plaintext highlighter-rouge">+</code></li>
+  <li>Connect <code class="language-plaintext highlighter-rouge">GND</code> and <code class="language-plaintext highlighter-rouge">GPIO0</code> to <code class="language-plaintext highlighter-rouge">-</code>
+Run the Arduino IDE and before upload the code you must change to programming mode:</li>
+  <li>Connect and disconnect <code class="language-plaintext highlighter-rouge">Reset</code> to <code class="language-plaintext highlighter-rouge">-</code>. You will can see a blue light in the ESP-8266 that will indicate that you are in programming mode.</li>
+</ol>
+
+<p><img src="https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/esp8266_programming.png" alt="ESP-8266" title="ESP-8266" /></p>
+
+<h3 id="arduino-uno">Arduino UNO</h3>
+
+<p>With arduino you could use the 3,3V as <code class="language-plaintext highlighter-rouge">+</code>, the <code class="language-plaintext highlighter-rouge">GND</code> as <code class="language-plaintext highlighter-rouge">-</code>, and the ports <code class="language-plaintext highlighter-rouge">RX</code> and <code class="language-plaintext highlighter-rouge">TX</code> for the transfer.</p>
+
+<blockquote>
+  <p>NOTE: It’s important that you connect permanently the <code class="language-plaintext highlighter-rouge">reset</code> port to <code class="language-plaintext highlighter-rouge">-</code> in Arduino for program the ESP-8266.</p>
+</blockquote>
+
+<h2 id="custom-programmer">Custom Programmer</h2>
+
+<p>I’ve built with a board a programmer with a reset button that will ease the steps indicated before. This is the result.</p>
+
+<p><img src="https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/esp8266_1.jpg" alt="ESP-8266" title="ESP-8266" /></p>
+
+<p><img src="https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/esp8266_2.jpg" alt="ESP-8266" title="ESP-8266" /></p>
+
+<p><img src="https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/esp8266_3.jpg" alt="ESP-8266" title="ESP-8266" /></p>
+
+</div>
+  <br/>
+  <div class="share-page">
+  <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
+
+  <!-- Twitter -->
+  <a href="https://twitter.com/share" class="twitter-share-button" data-via="frandorado">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+  <!-- Google + -->
+  <div class="g-plus" data-action="share" data-annotation="bubble"></div>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+  <!-- Facebook -->
+  <div class="fb-share-button" data-href="http://localhost:4000/iot/2018/10/15/esp-8266-programer.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+</div>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+</div>
+
+
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+            
+            <div class="panel-body">
+              <h4>Related Posts</h4>
+              <ul>
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/iot/2018/10/19/example-mqtt-mosquitto.html">Example of MQTT with Mosquitto</a>
+                  
+                    (Categories: <a href="/category/iot">iot</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/iot/2018/09/30/control-bluetooth-ligth-bulb.html">Control of RST01BL Bluetooth Light Bulb with Home Assistant</a>
+                  
+                    (Categories: <a href="/category/iot">iot</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+  
+  </ul>
+</div>
+
+
+<div class="PageNavigation">
+  
+    <a class="prev" href="/iot/2018/09/30/control-bluetooth-ligth-bulb.html">&laquo; Control of RST01BL Bluetooth Light Bulb with Home Assistant</a>
+  
+  
+    <a class="next" href="/iot/2018/10/19/example-mqtt-mosquitto.html">Example of MQTT with Mosquitto &raquo;</a>
+  
+</div>
+  
+
+
+        <footer>
+          
+          <div class="btn-github" style="float:right;">
+            &copy; Francisco Dorado
+          
+            - <a href="https://github.com/frandorado">https://github.com/frandorado</a>
+          
+          </div>
+        </footer>
+      </div>
+      <!-- end /.col-sm-8 -->
+    </div>
+    <!-- end /.container -->
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/super-search.js"></script>
+    <script src="/static/js/thickbox-compressed.js"></script>
+    <script src="/static/js/projects.js"></script>
+
+    <div hidden="true">Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+  </body>
+</html>
+

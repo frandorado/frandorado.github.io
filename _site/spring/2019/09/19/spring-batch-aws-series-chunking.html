@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/static/img/favicon.ico" />
+    
+    <!-- realfavicongenerator -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/static/img/favicons/site.webmanifest">
+    <link rel="mask-icon" href="/static/img/favicons/safari-pinned-tab.svg" color="#2d4f59">
+    <link rel="shortcut icon" href="/static/img/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-config" content="/static/img/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Spring Batch AWS Series (II): Remote Chunking - Software Developer Blog</title>
+    <meta name="author" content="Francisco Dorado" />
+    <meta name="description" content="Spring Batch AWS Series (II): Remote Chunking" />
+    <meta name="keywords" content="Spring Batch AWS Series (II): Remote Chunking, Software Developer Blog, spring" />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+    <meta content="" property="fb:app_id">
+    <meta content="Software Developer Blog" property="og:site_name">
+
+    
+
+    
+      <meta content="Spring Batch AWS Series (II): Remote Chunking" property="og:title">
+      <meta content="article" property="og:type">
+    
+
+    
+      <meta content="Francisco Dorado - Software Developer" property="og:description">
+    
+
+    
+      <meta content="http://localhost:4000/spring/2019/09/19/spring-batch-aws-series-chunking.html" property="og:url">
+    
+
+    
+      <meta content="2019-09-19T02:00:00+02:00" property="article:published_time">
+      <meta content="http://localhost:4000/about/" property="article:author">
+    
+
+    
+      <meta content="http://localhost:4000/static/img/avatar.jpg" property="og:image">
+    
+
+    
+      
+        <meta content="spring" property="article:section">
+      
+    
+
+    
+      
+        <meta content="spring" property="article:tag">
+      
+        <meta content="batch" property="article:tag">
+      
+        <meta content="integration" property="article:tag">
+      
+        <meta content="aws" property="article:tag">
+      
+        <meta content="remote" property="article:tag">
+      
+        <meta content="partitioning" property="article:tag">
+      
+        <meta content="chunking" property="article:tag">
+      
+        <meta content="sqs" property="article:tag">
+      
+    
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@frandorado">
+    <meta name="twitter:creator" content="@frandorado">
+
+    
+      <meta name="twitter:title" content="Spring Batch AWS Series (II): Remote Chunking">
+    
+
+    
+      <meta name="twitter:url" content="http://localhost:4000/spring/2019/09/19/spring-batch-aws-series-chunking.html">
+    
+
+    
+      <meta name="twitter:description" content="Francisco Dorado - Software Developer">
+    
+
+    
+
+    <!-- Font awesome icons -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+    <!-- syntax highlighting CSS -->
+    <link rel="stylesheet" href="/static/css/syntax.css">
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300italic,300,400italic,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/super-search.css">
+    <link rel="stylesheet" href="/static/css/thickbox.css">
+    <link rel="stylesheet" href="/static/css/projects.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+
+    
+  </head>
+  <body>
+    <div class="container">
+      <div class="col-sm-3">
+        <div class="fixed-condition">
+          <a href="/"><img class="profile-avatar" src="/static/img/avatar.jpg" height="75px" width="75px" /></a>
+          <h1 class="author-name">Francisco Dorado</h1>
+          
+            <div class="profile-about">
+              I am a software developer focused on back-end and specialized in Java and Spring.
+            </div>
+          
+          <div class="social">
+            <ul>
+              
+                <li><a href="https://twitter.com/frandorado" target="_blank"><i class="fa fa-twitter"></i></a></li>
+              
+                <li><a href="https://www.linkedin.com/in/franciscodorado" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+              
+                <li><a href="https://github.com/frandorado" target="_blank"><i class="fa fa-github"></i></a></li>
+              
+            </ul>
+          </div>
+          <div class="search" id="js-search">
+            <input type="text" placeholder="(sitemap)~$ type to search" class="search__input form-control" id="js-search__input">
+            <ul class="search__results" id="js-search__results"></ul>
+          </div>
+          <hr />
+          <ul class="sidebar-nav">
+            <strong>Navigation</strong>
+            <li><a href="/">Home</a></li>
+            
+              <li><a class="about" href="/about/">About Me</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/cv/resume">CV</a></li>
+              
+              
+                <ul class="sidebar-nav">
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/work-experience">Work Experience</a></li>
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/skills">Skills</a></li>
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/education-training">Education and Training</a></li>
+                  
+                </ul>
+              
+              
+            
+              <li><a class="about" href="/projects/">Projects</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/statistics/">Statistics</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/feed.xml">Feed RSS</a></li>
+              
+              
+              
+            
+          </ul>
+          <br />
+          <img src="https://doradofran.pythonanywhere.com/count/tag.svg?url=http://localhost:4000/spring/2019/09/19/spring-batch-aws-series-chunking.html" alt="Hits">
+        </div>
+        <!-- end /.fixed-condition -->
+      </div>
+      <div class="col-sm-8 col-offset-1 main-layout">
+        <header class="post-header">
+  <h1 class="post-title">Spring Batch AWS Series (II): Remote Chunking</h1>
+  <h5>
+    <span class="reading-time" title="Estimated read time">
+  
+  
+    (Reading time: 5 mins)
+  
+</span>
+  </h5>
+</header>
+
+<span class="time">19 Sep 2019</span>
+
+  <span class="categories">
+    &raquo; <a href="/category/spring">spring</a>
+  </span>
+
+
+
+
+
+
+<div class="content">
+  <div class="post"><p><img src="https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/springbatchaws/remotechunking.png" alt="Remote Chunking" title="Remote Chunking" /></p>
+
+<p>In this post we are going to implement the first step of our Spring Batch AWS Series using Remote Chunking. This step will send a chunk of numbers and the slaves will log the numbers that are prime.</p>
+
+<h2 id="table-of-contents">Table of contents</h2>
+
+<ol>
+  <li><a href="#section1">Description</a></li>
+  <li><a href="#section2">Common configuration</a></li>
+  <li><a href="#section3">Master project</a></li>
+  <li><a href="#section4">Slave project</a></li>
+  <li><a href="#section5">How to run</a></li>
+  <li><a href="#section6">References</a></li>
+</ol>
+
+<h2 id="1-description"><a name="section1"></a>1. Description</h2>
+
+<p>In Remote Chunking the Step processing is split across multiple processes, in our case communicating with each other using AWS SQS. This pattern is useful when the Master is not a bottleneck</p>
+
+<p><img src="https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/springbatchaws/remotechunking2.png" alt="Remote Chunking detailed" title="Remote Chunking detailed" /></p>
+
+<p>With Remote Chunking the data is read by the <code class="language-plaintext highlighter-rouge">master</code> and sent to the <code class="language-plaintext highlighter-rouge">slaves</code> using SQS for processing. Once the process finishes, the result of the slaves will be returned to the master.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Master</code> does all the I/O operations</li>
+  <li><code class="language-plaintext highlighter-rouge">Slave</code> doesn’t need database access to get the information. This arrives through SQS messages.</li>
+</ul>
+
+<h2 id="2-common-configuration"><a name="section2"></a>2. Common configuration</h2>
+
+<p>We need to configure next tools:</p>
+
+<ul>
+  <li><strong>Localstack</strong>: It’s used for simulate AWS SQS queues in local.</li>
+  <li><strong>Postgresql</strong>: It’s used for store Spring Batch metadata about jobs and steps.</li>
+</ul>
+
+<p>The next docker-compose.yml contains all the necesary for our projects:</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3'</span>
+<span class="na">services</span><span class="pi">:</span>
+
+  <span class="na">postgres</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">postgres:9.6.8-alpine</span>
+    <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">5432:5432</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="na">POSTGRES_USER</span><span class="pi">:</span> <span class="s">user</span>
+      <span class="na">POSTGRES_PASSWORD</span><span class="pi">:</span> <span class="s">password</span>
+      <span class="na">POSTGRES_DB</span><span class="pi">:</span> <span class="s">db</span>
+
+  <span class="na">localstack</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">localstack/localstack</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">4567-4583:4567-4583"</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">SERVICES=sqs</span>
+      <span class="pi">-</span> <span class="s">DATA_DIR=${DATA_DIR- }</span>
+      <span class="pi">-</span> <span class="s">PORT_WEB_UI=${PORT_WEB_UI- }</span>
+      <span class="pi">-</span> <span class="s">LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }</span>
+      <span class="pi">-</span> <span class="s">DOCKER_HOST=unix:///var/run/docker.sock</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">${TMPDIR:-/tmp/localstack}:/tmp/localstack"</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">/var/run/docker.sock:/var/run/docker.sock"</span>
+</code></pre></div></div>
+
+<h2 id="3-master-project"><a name="section3"></a>3. Master project</h2>
+
+<p>This section shows the most important aspect of our master application, how to comunicate the requests and responses with the slave.</p>
+
+<p><strong>“Master =&gt; Slave” Integration Flow (Request outbounds)</strong></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Bean</span>
+<span class="kd">public</span> <span class="nc">IntegrationFlow</span> <span class="nf">step1RequestIntegrationFlow</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="nc">IntegrationFlows</span>
+              <span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">step1RequestMesssageChannel</span><span class="o">())</span>
+              <span class="o">.</span><span class="na">transform</span><span class="o">(</span><span class="n">chunkRequestToJsonTransformer</span><span class="o">)</span>
+              <span class="o">.</span><span class="na">handle</span><span class="o">(</span><span class="n">sqsMessageHandler</span><span class="o">())</span>
+              <span class="o">.</span><span class="na">get</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<ol>
+  <li>Read from <code class="language-plaintext highlighter-rouge">step1RequestMessageChannel</code> channel. We have to define a special writer (<code class="language-plaintext highlighter-rouge">ChunkMessageChannelItemWriter</code>) that will write to the <code class="language-plaintext highlighter-rouge">step1RequestMessageChannel</code>.</li>
+  <li>The previous channel will receive a <code class="language-plaintext highlighter-rouge">ChunkRequest</code> object with all the necessary information for the slaves. In this step we’ll transform this object in Json using our own tranform <code class="language-plaintext highlighter-rouge">ChunkRequestToJsonTransformer</code>.</li>
+  <li>Send to SQS. This handler will send the previous message to SQS using <code class="language-plaintext highlighter-rouge">SqsMessageHandler</code></li>
+</ol>
+
+<p><strong>“Slave =&gt; Master” Integration Flow (Response inbounds)</strong></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Bean</span>
+<span class="kd">public</span> <span class="nc">IntegrationFlow</span> <span class="nf">step1ResponseIntegrationFlow</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="nc">IntegrationFlows</span>
+            <span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">sqsMessageDrivenChannelAdapter</span><span class="o">())</span>
+            <span class="o">.</span><span class="na">transform</span><span class="o">(</span><span class="n">jsonToChunkResponseTransformer</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">channel</span><span class="o">(</span><span class="n">step1ResponseMessageChannel</span><span class="o">()).</span><span class="na">get</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ol>
+  <li>Read from SQS messages using <code class="language-plaintext highlighter-rouge">SqsMessageDrivenChannelAdapter</code> and send the json to the transformer.</li>
+  <li>Transform the received json in <code class="language-plaintext highlighter-rouge">ChunkResponse</code> using <code class="language-plaintext highlighter-rouge">JsonToChunkResponseTransformer</code></li>
+  <li>Send the <code class="language-plaintext highlighter-rouge">ChunkResponse</code> to <code class="language-plaintext highlighter-rouge">step1ResponseMessageChannel</code> that is configured in <code class="language-plaintext highlighter-rouge">ChunkMessageChannelItemWriter</code> as reply channel. Now Spring will mark the step with the result received.</li>
+</ol>
+
+<h2 id="4-slave-project"><a name="section4"></a>4. Slave project</h2>
+
+<p>This section shows the communication with the master.</p>
+
+<p><strong>“Master =&gt; Slave” Integration Flow (Request inbounds)</strong></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Bean</span>
+<span class="kd">public</span> <span class="nc">IntegrationFlow</span> <span class="nf">step1RequestIntegrationFlow</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="nc">IntegrationFlows</span>
+              <span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">buildRequestSqsMessageDrivenChannelAdapter</span><span class="o">())</span>
+              <span class="o">.</span><span class="na">transform</span><span class="o">(</span><span class="n">jsonToChunkRequestTransformer</span><span class="o">)</span>
+              <span class="o">.</span><span class="na">handle</span><span class="o">(</span><span class="n">step1ChunkProcessorChunkHandler</span><span class="o">())</span>
+              <span class="o">.</span><span class="na">channel</span><span class="o">(</span><span class="n">step1ResponseMessageChannel</span><span class="o">())</span>
+              <span class="o">.</span><span class="na">get</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ol>
+  <li>Read from SQS messages using <code class="language-plaintext highlighter-rouge">SqsMessageDrivenChannelAdapter</code> and send the json to the transformer.</li>
+  <li>Transform the received json in <code class="language-plaintext highlighter-rouge">ChunkRequest</code> using <code class="language-plaintext highlighter-rouge">JsonToChunkRequestTranformer</code></li>
+  <li>Send the <code class="language-plaintext highlighter-rouge">ChunkRequest</code> to <code class="language-plaintext highlighter-rouge">step1ChunkProcessorChunkHandler()</code> that is a special handler where you could define your processor and/or writter.</li>
+  <li>The result will be sent to <code class="language-plaintext highlighter-rouge">step1ResponseMessageChannel</code></li>
+</ol>
+
+<p><strong>“Slave =&gt; Master” Integration Flow (Response outbounds)</strong></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Bean</span>
+<span class="kd">public</span> <span class="nc">IntegrationFlow</span> <span class="nf">step1ResponseIntegrationFlow</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="nc">IntegrationFlows</span>
+              <span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">step1ResponseMessageChannel</span><span class="o">())</span>
+              <span class="o">.</span><span class="na">transform</span><span class="o">(</span><span class="n">chunkResponseToJsonTransformer</span><span class="o">)</span>
+              <span class="o">.</span><span class="na">handle</span><span class="o">(</span><span class="n">sqsMessageHandler</span><span class="o">())</span>
+              <span class="o">.</span><span class="na">get</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ol>
+  <li>Read from <code class="language-plaintext highlighter-rouge">step1ResponseMessageChannel</code> and send the received <code class="language-plaintext highlighter-rouge">ChunkResponse</code> to the transformer.</li>
+  <li>Transform the object in json using <code class="language-plaintext highlighter-rouge">ChunkResponseToJsonTransformer</code></li>
+  <li>Send the previous message to response queue in SQS.</li>
+</ol>
+
+<h2 id="5-how-to-run"><a name="section5"></a>5. How to run</h2>
+
+<ul>
+  <li>Run the docker-compose.yml file
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">docker-compose up</code></li>
+      <li><code class="language-plaintext highlighter-rouge">TMPDIR=/private$TMPDIR docker-compose up</code> (MAC users)</li>
+    </ul>
+  </li>
+  <li>
+    <p>Create the queues if don’t exists</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws sqs create-queue --endpoint http://localhost:4576 --queue-name step1-request.fifo --attributes '{"FifoQueue": "true", "ContentBasedDeduplication":"true"}'
+
+aws sqs create-queue --endpoint http://localhost:4576 --queue-name step1-response.fifo --attributes '{"FifoQueue": "true", "ContentBasedDeduplication":"true"}'
+
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Run one or more slaves using the main class <code class="language-plaintext highlighter-rouge">com.frandorado.springbatchawsintegrationslave.SpringBatchAwsIntegrationSlaveApplication</code></p>
+  </li>
+  <li>Run the master using the main application <code class="language-plaintext highlighter-rouge">com.frandorado.springbatchawsintegrationmaster.SpringBatchAwsIntegrationMasterApplication</code></li>
+</ul>
+
+<h2 id="6-references"><a name="section6"></a>6. References</h2>
+
+<p>[1] <a href="https://github.com/frandorado/spring-projects/tree/master/spring-batch-aws-integration">Link to the project in Github</a></p>
+
+<p>[2] <a href="https://frandorado.github.io/spring/2019/07/29/spring-batch-aws-series-introduction.html">Spring Batch AWS Series (I): Introduction</a></p>
+
+<p>[3] <a href="https://github.com/spring-projects/spring-batch">Spring Batch Framework</a></p>
+
+</div>
+  <br/>
+  <div class="share-page">
+  <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
+
+  <!-- Twitter -->
+  <a href="https://twitter.com/share" class="twitter-share-button" data-via="frandorado">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+  <!-- Google + -->
+  <div class="g-plus" data-action="share" data-annotation="bubble"></div>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+  <!-- Facebook -->
+  <div class="fb-share-button" data-href="http://localhost:4000/spring/2019/09/19/spring-batch-aws-series-chunking.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+</div>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+</div>
+
+
+  
+    
+      
+        
+          
+            
+            <div class="panel-body">
+              <h4>Related Posts</h4>
+              <ul>
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2020/04/18/spring-upload-file-s3-localstack.html">Spring upload and download files to S3 with localstack</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2020/03/31/spring-actuator-undertow.html">Undertow metrics with Spring Actuator</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2020/02/14/spring-custom-json-transforms.html">Custom deserialization in Spring</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2019/10/11/spring-batch-aws-series-partitioning.html">Spring Batch AWS Series (III): Remote Partitioning</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2019/07/29/spring-batch-aws-series-introduction.html">Spring Batch AWS Series (I): Introduction</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2019/06/26/spring-reactive-vs-non-reactive-performance.html">Reactive vs Non-Reactive Spring Performance</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+  
+  </ul>
+</div>
+
+
+<div class="PageNavigation">
+  
+    <a class="prev" href="/spring/2019/07/29/spring-batch-aws-series-introduction.html">&laquo; Spring Batch AWS Series (I): Introduction</a>
+  
+  
+    <a class="next" href="/spring/2019/10/11/spring-batch-aws-series-partitioning.html">Spring Batch AWS Series (III): Remote Partitioning &raquo;</a>
+  
+</div>
+  
+
+
+        <footer>
+          
+          <div class="btn-github" style="float:right;">
+            &copy; Francisco Dorado
+          
+            - <a href="https://github.com/frandorado">https://github.com/frandorado</a>
+          
+          </div>
+        </footer>
+      </div>
+      <!-- end /.col-sm-8 -->
+    </div>
+    <!-- end /.container -->
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/super-search.js"></script>
+    <script src="/static/js/thickbox-compressed.js"></script>
+    <script src="/static/js/projects.js"></script>
+
+    <div hidden="true">Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+  </body>
+</html>
+

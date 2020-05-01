@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/static/img/favicon.ico" />
+    
+    <!-- realfavicongenerator -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/static/img/favicons/site.webmanifest">
+    <link rel="mask-icon" href="/static/img/favicons/safari-pinned-tab.svg" color="#2d4f59">
+    <link rel="shortcut icon" href="/static/img/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-config" content="/static/img/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>AsyncRestTemplate returns 404 (Site Not Found) with Apache HttpComponents - Software Developer Blog</title>
+    <meta name="author" content="Francisco Dorado" />
+    <meta name="description" content="AsyncRestTemplate returns 404 (Site Not Found) with Apache HttpComponents" />
+    <meta name="keywords" content="AsyncRestTemplate returns 404 (Site Not Found) with Apache HttpComponents, Software Developer Blog, spring" />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+    <meta content="" property="fb:app_id">
+    <meta content="Software Developer Blog" property="og:site_name">
+
+    
+
+    
+      <meta content="AsyncRestTemplate returns 404 (Site Not Found) with Apache HttpComponents" property="og:title">
+      <meta content="article" property="og:type">
+    
+
+    
+      <meta content="Francisco Dorado - Software Developer" property="og:description">
+    
+
+    
+      <meta content="http://localhost:4000/spring/2018/12/17/asyncresttemplate-apache-404.html" property="og:url">
+    
+
+    
+      <meta content="2018-12-17T01:00:00+01:00" property="article:published_time">
+      <meta content="http://localhost:4000/about/" property="article:author">
+    
+
+    
+      <meta content="http://localhost:4000/static/img/avatar.jpg" property="og:image">
+    
+
+    
+      
+        <meta content="spring" property="article:section">
+      
+    
+
+    
+      
+        <meta content="spring" property="article:tag">
+      
+        <meta content="asyncresttemplate" property="article:tag">
+      
+        <meta content="apache" property="article:tag">
+      
+        <meta content="factory" property="article:tag">
+      
+        <meta content="HttpComponentsAsyncClientHttpRequestFactory" property="article:tag">
+      
+        <meta content="site not found" property="article:tag">
+      
+        <meta content="404" property="article:tag">
+      
+    
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@frandorado">
+    <meta name="twitter:creator" content="@frandorado">
+
+    
+      <meta name="twitter:title" content="AsyncRestTemplate returns 404 (Site Not Found) with Apache HttpComponents">
+    
+
+    
+      <meta name="twitter:url" content="http://localhost:4000/spring/2018/12/17/asyncresttemplate-apache-404.html">
+    
+
+    
+      <meta name="twitter:description" content="Francisco Dorado - Software Developer">
+    
+
+    
+
+    <!-- Font awesome icons -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+    <!-- syntax highlighting CSS -->
+    <link rel="stylesheet" href="/static/css/syntax.css">
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300italic,300,400italic,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/super-search.css">
+    <link rel="stylesheet" href="/static/css/thickbox.css">
+    <link rel="stylesheet" href="/static/css/projects.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+
+    
+  </head>
+  <body>
+    <div class="container">
+      <div class="col-sm-3">
+        <div class="fixed-condition">
+          <a href="/"><img class="profile-avatar" src="/static/img/avatar.jpg" height="75px" width="75px" /></a>
+          <h1 class="author-name">Francisco Dorado</h1>
+          
+            <div class="profile-about">
+              I am a software developer focused on back-end and specialized in Java and Spring.
+            </div>
+          
+          <div class="social">
+            <ul>
+              
+                <li><a href="https://twitter.com/frandorado" target="_blank"><i class="fa fa-twitter"></i></a></li>
+              
+                <li><a href="https://www.linkedin.com/in/franciscodorado" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+              
+                <li><a href="https://github.com/frandorado" target="_blank"><i class="fa fa-github"></i></a></li>
+              
+            </ul>
+          </div>
+          <div class="search" id="js-search">
+            <input type="text" placeholder="(sitemap)~$ type to search" class="search__input form-control" id="js-search__input">
+            <ul class="search__results" id="js-search__results"></ul>
+          </div>
+          <hr />
+          <ul class="sidebar-nav">
+            <strong>Navigation</strong>
+            <li><a href="/">Home</a></li>
+            
+              <li><a class="about" href="/about/">About Me</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/cv/resume">CV</a></li>
+              
+              
+                <ul class="sidebar-nav">
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/work-experience">Work Experience</a></li>
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/skills">Skills</a></li>
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/education-training">Education and Training</a></li>
+                  
+                </ul>
+              
+              
+            
+              <li><a class="about" href="/projects/">Projects</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/statistics/">Statistics</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/feed.xml">Feed RSS</a></li>
+              
+              
+              
+            
+          </ul>
+          <br />
+          <img src="https://doradofran.pythonanywhere.com/count/tag.svg?url=http://localhost:4000/spring/2018/12/17/asyncresttemplate-apache-404.html" alt="Hits">
+        </div>
+        <!-- end /.fixed-condition -->
+      </div>
+      <div class="col-sm-8 col-offset-1 main-layout">
+        <header class="post-header">
+  <h1 class="post-title">AsyncRestTemplate returns 404 (Site Not Found) with Apache HttpComponents</h1>
+  <h5>
+    <span class="reading-time" title="Estimated read time">
+  
+  
+    (Reading time: ~1 min)
+  
+</span>
+  </h5>
+</header>
+
+<span class="time">17 Dec 2018</span>
+
+  <span class="categories">
+    &raquo; <a href="/category/spring">spring</a>
+  </span>
+
+
+
+
+
+
+<div class="content">
+  <div class="post"><p><img src="https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/asyncresttemplate-apache-404.png" alt="404 Not Found" title="404 Not Found" /></p>
+
+<p>When you create an <code class="language-plaintext highlighter-rouge">AsyncRestTemplate</code>, Spring uses <code class="language-plaintext highlighter-rouge">SimpleClientHttpRequestFactory</code> by default which depends on default configuration of <code class="language-plaintext highlighter-rouge">HttpURLConnection</code>. This implementation doesn’t have connection pooling.</p>
+
+<p>Apache HttpComponents provides the <code class="language-plaintext highlighter-rouge">HttpComponentsAsyncClientHttpRequestFactory</code> with connection pooling support and using NIO (Non-blocking Input/Output) asynchronous http client, called <code class="language-plaintext highlighter-rouge">HttpAsyncClient</code>.</p>
+
+<h2 id="the-problem">The problem</h2>
+
+<p>In a recent project, we decided to change the the Spring’s default <code class="language-plaintext highlighter-rouge">SimpleClientHttpRequestFactory</code> to the Apache Components factory <code class="language-plaintext highlighter-rouge">HttpComponentsAsyncClientHttpRequestFactory</code> by the advantages of connection pooling. The solution seemed easy, you should only add the dependency:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.apache.httpcomponents<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>httpasyncclient<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+<p>and change the Spring Bean’s definition from this:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Bean</span>
+<span class="kd">public</span> <span class="nc">AsyncRestTemplate</span> <span class="nf">asyncRestTemplate</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">AsyncRestTemplate</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>to this:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Bean</span>
+<span class="kd">public</span> <span class="nc">AsyncRestTemplate</span> <span class="nf">asyncRestTemplate</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">AsyncRestTemplate</span><span class="o">(</span><span class="k">new</span> <span class="nc">HttpComponentsAsyncClientHttpRequestFactory</span><span class="o">());</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>But when we did a request from Postman to our controller propagating the received headers to a new call using for example <code class="language-plaintext highlighter-rouge">https://httpstat.us/200</code> (GET), we received this error:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Async GET request for "https://httpstat.us/200" resulted in 404 (Site Not Found); invoking error handler
+</code></pre></div></div>
+
+<p>The same request with <code class="language-plaintext highlighter-rouge">SimpleClientHttpRequestFactory</code> returned “200 OK”.</p>
+
+<h2 id="the-solution">The solution</h2>
+
+<p>After a time trying to resolve the error we found that Postman includes a header called <code class="language-plaintext highlighter-rouge">host</code> that provokes a 404 with the Apache Factory implementation.</p>
+
+<blockquote>
+  <p>host=localhost:8080</p>
+</blockquote>
+
+<p>So, the solution was to delete this header from the request. You could be a example of this error in [1]. In this example we make four calls with and without headers and using the two factories. The log result:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>===== Execution without host header =====
+Factory=[SimpleClientHttpRequestFactory] ResponseBody=["200 OK"]
+Factory=[HttpComponentsAsyncClientHttpRequestFactory] ResponseBody=["200 OK"]
+
+===== Execution with host header =====
+Factory=[SimpleClientHttpRequestFactory] ResponseBody=["200 OK"]
+Factory=[HttpComponentsAsyncClientHttpRequestFactory] Exception=[org.springframework.web.client.HttpClientErrorException: 404 Site Not Found]
+
+</code></pre></div></div>
+
+<h2 id="references">References</h2>
+
+<p>[1] Link to the project in <a href="https://github.com/frandorado/spring-projects/tree/master/async-rest-template-apache">Github</a></p>
+
+</div>
+  <br/>
+  <div class="share-page">
+  <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
+
+  <!-- Twitter -->
+  <a href="https://twitter.com/share" class="twitter-share-button" data-via="frandorado">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+  <!-- Google + -->
+  <div class="g-plus" data-action="share" data-annotation="bubble"></div>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+  <!-- Facebook -->
+  <div class="fb-share-button" data-href="http://localhost:4000/spring/2018/12/17/asyncresttemplate-apache-404.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+</div>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+</div>
+
+
+  
+    
+      
+        
+          
+            
+            <div class="panel-body">
+              <h4>Related Posts</h4>
+              <ul>
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2020/04/18/spring-upload-file-s3-localstack.html">Spring upload and download files to S3 with localstack</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2020/03/31/spring-actuator-undertow.html">Undertow metrics with Spring Actuator</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2020/02/14/spring-custom-json-transforms.html">Custom deserialization in Spring</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2019/10/11/spring-batch-aws-series-partitioning.html">Spring Batch AWS Series (III): Remote Partitioning</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2019/09/19/spring-batch-aws-series-chunking.html">Spring Batch AWS Series (II): Remote Chunking</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2019/07/29/spring-batch-aws-series-introduction.html">Spring Batch AWS Series (I): Introduction</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+  
+  </ul>
+</div>
+
+
+<div class="PageNavigation">
+  
+    <a class="prev" href="/spring/2018/11/15/log-request-response-with-body-spring.html">&laquo; Logging Requests and Responses in Spring (including body)</a>
+  
+  
+    <a class="next" href="/spring/2019/01/04/circuitbreaker-resilience4j-spring.html">Circuit Breaker with Resilience4j and Spring &raquo;</a>
+  
+</div>
+  
+
+
+        <footer>
+          
+          <div class="btn-github" style="float:right;">
+            &copy; Francisco Dorado
+          
+            - <a href="https://github.com/frandorado">https://github.com/frandorado</a>
+          
+          </div>
+        </footer>
+      </div>
+      <!-- end /.col-sm-8 -->
+    </div>
+    <!-- end /.container -->
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/super-search.js"></script>
+    <script src="/static/js/thickbox-compressed.js"></script>
+    <script src="/static/js/projects.js"></script>
+
+    <div hidden="true">Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+  </body>
+</html>
+

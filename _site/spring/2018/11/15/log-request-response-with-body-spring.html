@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/static/img/favicon.ico" />
+    
+    <!-- realfavicongenerator -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/static/img/favicons/site.webmanifest">
+    <link rel="mask-icon" href="/static/img/favicons/safari-pinned-tab.svg" color="#2d4f59">
+    <link rel="shortcut icon" href="/static/img/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-config" content="/static/img/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Logging Requests and Responses in Spring (including body) - Software Developer Blog</title>
+    <meta name="author" content="Francisco Dorado" />
+    <meta name="description" content="Logging Requests and Responses in Spring (including body)" />
+    <meta name="keywords" content="Logging Requests and Responses in Spring (including body), Software Developer Blog, spring" />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+    <meta content="" property="fb:app_id">
+    <meta content="Software Developer Blog" property="og:site_name">
+
+    
+
+    
+      <meta content="Logging Requests and Responses in Spring (including body)" property="og:title">
+      <meta content="article" property="og:type">
+    
+
+    
+      <meta content="Francisco Dorado - Software Developer" property="og:description">
+    
+
+    
+      <meta content="http://localhost:4000/spring/2018/11/15/log-request-response-with-body-spring.html" property="og:url">
+    
+
+    
+      <meta content="2018-11-15T01:00:00+01:00" property="article:published_time">
+      <meta content="http://localhost:4000/about/" property="article:author">
+    
+
+    
+      <meta content="http://localhost:4000/static/img/avatar.jpg" property="og:image">
+    
+
+    
+      
+        <meta content="spring" property="article:section">
+      
+    
+
+    
+      
+        <meta content="spring" property="article:tag">
+      
+        <meta content="logging" property="article:tag">
+      
+        <meta content="request" property="article:tag">
+      
+        <meta content="response" property="article:tag">
+      
+        <meta content="java" property="article:tag">
+      
+        <meta content="body" property="article:tag">
+      
+    
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@frandorado">
+    <meta name="twitter:creator" content="@frandorado">
+
+    
+      <meta name="twitter:title" content="Logging Requests and Responses in Spring (including body)">
+    
+
+    
+      <meta name="twitter:url" content="http://localhost:4000/spring/2018/11/15/log-request-response-with-body-spring.html">
+    
+
+    
+      <meta name="twitter:description" content="Francisco Dorado - Software Developer">
+    
+
+    
+
+    <!-- Font awesome icons -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+    <!-- syntax highlighting CSS -->
+    <link rel="stylesheet" href="/static/css/syntax.css">
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300italic,300,400italic,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/super-search.css">
+    <link rel="stylesheet" href="/static/css/thickbox.css">
+    <link rel="stylesheet" href="/static/css/projects.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+
+    
+  </head>
+  <body>
+    <div class="container">
+      <div class="col-sm-3">
+        <div class="fixed-condition">
+          <a href="/"><img class="profile-avatar" src="/static/img/avatar.jpg" height="75px" width="75px" /></a>
+          <h1 class="author-name">Francisco Dorado</h1>
+          
+            <div class="profile-about">
+              I am a software developer focused on back-end and specialized in Java and Spring.
+            </div>
+          
+          <div class="social">
+            <ul>
+              
+                <li><a href="https://twitter.com/frandorado" target="_blank"><i class="fa fa-twitter"></i></a></li>
+              
+                <li><a href="https://www.linkedin.com/in/franciscodorado" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+              
+                <li><a href="https://github.com/frandorado" target="_blank"><i class="fa fa-github"></i></a></li>
+              
+            </ul>
+          </div>
+          <div class="search" id="js-search">
+            <input type="text" placeholder="(sitemap)~$ type to search" class="search__input form-control" id="js-search__input">
+            <ul class="search__results" id="js-search__results"></ul>
+          </div>
+          <hr />
+          <ul class="sidebar-nav">
+            <strong>Navigation</strong>
+            <li><a href="/">Home</a></li>
+            
+              <li><a class="about" href="/about/">About Me</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/cv/resume">CV</a></li>
+              
+              
+                <ul class="sidebar-nav">
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/work-experience">Work Experience</a></li>
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/skills">Skills</a></li>
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/education-training">Education and Training</a></li>
+                  
+                </ul>
+              
+              
+            
+              <li><a class="about" href="/projects/">Projects</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/statistics/">Statistics</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/feed.xml">Feed RSS</a></li>
+              
+              
+              
+            
+          </ul>
+          <br />
+          <img src="https://doradofran.pythonanywhere.com/count/tag.svg?url=http://localhost:4000/spring/2018/11/15/log-request-response-with-body-spring.html" alt="Hits">
+        </div>
+        <!-- end /.fixed-condition -->
+      </div>
+      <div class="col-sm-8 col-offset-1 main-layout">
+        <header class="post-header">
+  <h1 class="post-title">Logging Requests and Responses in Spring (including body)</h1>
+  <h5>
+    <span class="reading-time" title="Estimated read time">
+  
+  
+    (Reading time: 6 mins)
+  
+</span>
+  </h5>
+</header>
+
+<span class="time">15 Nov 2018</span>
+
+  <span class="categories">
+    &raquo; <a href="/category/spring">spring</a>
+  </span>
+
+
+
+
+
+
+<div class="content">
+  <div class="post"><p>Recently we have found some problems trying to log a complete Request and Response in a Spring Application. When we talk about a “complete Request and Response” we are indicating that we want to include the content of body. In this post we will talk about how to resolve this problem.</p>
+
+<h2 id="1-alternatives">1. Alternatives</h2>
+
+<p>When you look for differents alternatives to log the request and response you could find the next solutions:</p>
+
+<h3 id="11-using-the-embedded-server-tomcat-jetty-undertow">1.1. Using the embedded server (Tomcat, Jetty, Undertow)</h3>
+
+<p>This is a good solution if you don’t need to log the value of body. If you want an example with Undertow you can see my previous post about this <a href="........">Logging Request and Response with Undertow</a></p>
+
+<ul>
+  <li>Result:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  2018-10-25 19:54:49.900  INFO 81483 --- [  XNIO-2 task-3] io.undertow.request.dump: 
+  ----------------------------REQUEST---------------------------
+                 URI=/songs
+   characterEncoding=null
+       contentLength=-1
+         contentType=null
+              cookie=JSESSIONID=OxiTJHfy8yqLY3yT8scMfirBMRcl-imcPTcCDpYe
+              header=Postman-Token=a80517f2-dd94-4f96-ac5d-e859c66343a1
+              header=Accept=*/*
+              header=Connection=keep-alive
+              header=cache-control=no-cache
+              header=accept-encoding=gzip, deflate
+              header=cookie=JSESSIONID=OxiTJHfy8yqLY3yT8scMfirBMRcl-imcPTcCDpYe
+              header=User-Agent=PostmanRuntime/7.3.0
+              header=Host=localhost:8080
+              locale=[]
+              method=GET
+            protocol=HTTP/1.1
+         queryString=
+          remoteAddr=/0:0:0:0:0:0:0:1:58800
+          remoteHost=localhost
+              scheme=http
+                host=localhost:8080
+          serverPort=8080
+            isSecure=false
+  --------------------------RESPONSE--------------------------
+       contentLength=-1
+         contentType=application/json;charset=UTF-8
+              header=Connection=keep-alive
+              header=Transfer-Encoding=chunked
+              header=Content-Type=application/json;charset=UTF-8
+              header=Date=Thu, 25 Oct 2018 17:54:49 GMT
+              status=200
+
+  ==============================================================
+</code></pre></div>    </div>
+  </li>
+  <li>Disadvantages
+    <ul>
+      <li>It doesn’t include the body</li>
+      <li>We can’t define the template for log</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="12-using-commonsrequestloggingfilter">1.2. Using CommonsRequestLoggingFilter</h3>
+
+<p>The same than before, there is a <a href="https://github.com/grails/grails-core/issues/11024">Bug</a> with Spring Boot (&lt; 2.0) that doesn’t print the content of body. Furthermore only will log the request.</p>
+
+<ul>
+  <li>Code
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nd">@Bean</span>
+  <span class="kd">public</span> <span class="nc">CommonsRequestLoggingFilter</span> <span class="nf">logFilter</span><span class="o">()</span> <span class="o">{</span>
+      <span class="nc">CommonsRequestLoggingFilter</span> <span class="n">filter</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">CommonsRequestLoggingFilter</span><span class="o">();</span>
+        
+      <span class="n">filter</span><span class="o">.</span><span class="na">setIncludeQueryString</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+      <span class="n">filter</span><span class="o">.</span><span class="na">setIncludePayload</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+      <span class="n">filter</span><span class="o">.</span><span class="na">setMaxPayloadLength</span><span class="o">(</span><span class="mi">10000</span><span class="o">);</span>
+      <span class="n">filter</span><span class="o">.</span><span class="na">setIncludeHeaders</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+      <span class="n">filter</span><span class="o">.</span><span class="na">setAfterMessagePrefix</span><span class="o">(</span><span class="s">"REQUEST DATA : "</span><span class="o">);</span>
+        
+      <span class="k">return</span> <span class="n">filter</span><span class="o">;</span>
+  <span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Result in Spring Boot &gt; 2.0:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  2018-10-27 16:53:49.627 DEBUG 88615 --- [nio-8080-exec-2] o.s.w.f.CommonsRequestLoggingFilter      : REQUEST DATA : uri=/greetings;payload={
+      "message": "Hello Java world!"
+  }]
+</code></pre></div>    </div>
+  </li>
+  <li>Disadvantages
+    <ul>
+      <li>Only log the request</li>
+      <li>The body is not showed with Spring Boot &lt; 2.0</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="13-using-a-handler-interceptor">1.3. Using a handler interceptor</h3>
+
+<p>You could read the value of body in the Request in <code class="language-plaintext highlighter-rouge">preHandle</code> method of a <code class="language-plaintext highlighter-rouge">HandlerInterceptor</code>. This has the problem that the InputStream only can read once. Other solutions that I have found to avoid this is using a <code class="language-plaintext highlighter-rouge">ContentCachingRequestWrapper</code> but this didn’t work for me.</p>
+
+<ul>
+  <li>Code
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomHandlerInterceptorAdapter</span> <span class="kd">extends</span> <span class="nc">HandlerInterceptorAdapter</span> <span class="o">{</span>
+    
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">preHandle</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span>
+                           <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">,</span>
+                           <span class="nc">Object</span> <span class="n">handler</span><span class="o">)</span> <span class="o">{</span>
+        
+      <span class="nc">ServletRequest</span> <span class="n">servletRequest</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ContentCachingRequestWrapper</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+      <span class="n">servletRequest</span><span class="o">.</span><span class="na">getParameterMap</span><span class="o">();</span>
+        
+      <span class="c1">// Read inputStream from requestCacheWrapperObject and log it</span>
+        
+      <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Result:</p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1500645243383</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bad Request"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"exception"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.springframework.http.converter.HttpMessageNotReadableException"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Could not read document: Stream closed; nested exception is java.io.IOException: Stream closed"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/greetings"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li>Disadvantages
+    <ul>
+      <li>The Request can’t be read twice and we can’t log the body.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="2-our-solution">2. Our solution</h2>
+
+<h3 id="21-logging-requests-get-methods">2.1. Logging requests (GET methods)</h3>
+
+<p>The GET methods don’t contain body so we’ll use a HandlerInterceptor for this case.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">LogInterceptor</span> <span class="kd">implements</span> <span class="nc">HandlerInterceptor</span> <span class="o">{</span>
+    
+    <span class="nd">@Autowired</span>
+    <span class="nc">LoggingService</span> <span class="n">loggingService</span><span class="o">;</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">preHandle</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">,</span> 
+                             <span class="nc">Object</span> <span class="n">handler</span><span class="o">)</span> <span class="o">{</span>
+        
+        <span class="k">if</span> <span class="o">(</span><span class="nc">DispatcherType</span><span class="o">.</span><span class="na">REQUEST</span><span class="o">.</span><span class="na">name</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="n">request</span><span class="o">.</span><span class="na">getDispatcherType</span><span class="o">().</span><span class="na">name</span><span class="o">())</span>
+                <span class="o">&amp;&amp;</span> <span class="n">request</span><span class="o">.</span><span class="na">getMethod</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="nc">HttpMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">.</span><span class="na">name</span><span class="o">()))</span> <span class="o">{</span>
+            <span class="n">loggingService</span><span class="o">.</span><span class="na">logRequest</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="o">}</span>
+        
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="22-logging-requests-post-put-patch-delete-">2.2. Logging requests (POST, PUT, PATCH, DELETE …)</h3>
+
+<p>For others methods that contains a body, we’ll use RequestBodyAdviceAdapter.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@ControllerAdvice</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomRequestBodyAdviceAdapter</span> <span class="kd">extends</span> <span class="nc">RequestBodyAdviceAdapter</span> <span class="o">{</span>
+    
+    <span class="nd">@Autowired</span>
+    <span class="nc">LoggingService</span> <span class="n">loggingService</span><span class="o">;</span>
+    
+    <span class="nd">@Autowired</span>
+    <span class="nc">HttpServletRequest</span> <span class="n">httpServletRequest</span><span class="o">;</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">supports</span><span class="o">(</span><span class="nc">MethodParameter</span> <span class="n">methodParameter</span><span class="o">,</span> <span class="nc">Type</span> <span class="n">type</span><span class="o">,</span> 
+                            <span class="nc">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="nc">HttpMessageConverter</span><span class="o">&lt;?&gt;&gt;</span> <span class="n">aClass</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">Object</span> <span class="nf">afterBodyRead</span><span class="o">(</span><span class="nc">Object</span> <span class="n">body</span><span class="o">,</span> <span class="nc">HttpInputMessage</span> <span class="n">inputMessage</span><span class="o">,</span>
+                                <span class="nc">MethodParameter</span> <span class="n">parameter</span><span class="o">,</span> <span class="nc">Type</span> <span class="n">targetType</span><span class="o">,</span>
+            <span class="nc">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="nc">HttpMessageConverter</span><span class="o">&lt;?&gt;&gt;</span> <span class="n">converterType</span><span class="o">)</span> <span class="o">{</span>
+        
+        <span class="n">loggingService</span><span class="o">.</span><span class="na">logRequest</span><span class="o">(</span><span class="n">httpServletRequest</span><span class="o">,</span> <span class="n">body</span><span class="o">);</span>
+        
+        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">afterBodyRead</span><span class="o">(</span><span class="n">body</span><span class="o">,</span> <span class="n">inputMessage</span><span class="o">,</span> <span class="n">parameter</span><span class="o">,</span> <span class="n">targetType</span><span class="o">,</span> <span class="n">converterType</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<h2 id="23-logging-responses">2.3. Logging responses</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@ControllerAdvice</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomResponseBodyAdviceAdapter</span> <span class="kd">implements</span> <span class="nc">ResponseBodyAdvice</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="o">{</span>
+    
+    <span class="nd">@Autowired</span>
+    <span class="nc">LoggingService</span> <span class="n">loggingService</span><span class="o">;</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">supports</span><span class="o">(</span><span class="nc">MethodParameter</span> <span class="n">methodParameter</span><span class="o">,</span>
+                            <span class="nc">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="nc">HttpMessageConverter</span><span class="o">&lt;?&gt;&gt;</span> <span class="n">aClass</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">Object</span> <span class="nf">beforeBodyWrite</span><span class="o">(</span><span class="nc">Object</span> <span class="n">o</span><span class="o">,</span>
+                                  <span class="nc">MethodParameter</span> <span class="n">methodParameter</span><span class="o">,</span>
+                                  <span class="nc">MediaType</span> <span class="n">mediaType</span><span class="o">,</span>
+                                  <span class="nc">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="nc">HttpMessageConverter</span><span class="o">&lt;?&gt;&gt;</span> <span class="n">aClass</span><span class="o">,</span>
+                                  <span class="nc">ServerHttpRequest</span> <span class="n">serverHttpRequest</span><span class="o">,</span>
+                                  <span class="nc">ServerHttpResponse</span> <span class="n">serverHttpResponse</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">serverHttpRequest</span> <span class="k">instanceof</span> <span class="nc">ServletServerHttpRequest</span> <span class="o">&amp;&amp;</span>
+                <span class="n">serverHttpResponse</span> <span class="k">instanceof</span> <span class="nc">ServletServerHttpResponse</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">loggingService</span><span class="o">.</span><span class="na">logResponse</span><span class="o">(</span>
+                    <span class="o">((</span><span class="nc">ServletServerHttpRequest</span><span class="o">)</span> <span class="n">serverHttpRequest</span><span class="o">).</span><span class="na">getServletRequest</span><span class="o">(),</span>
+                    <span class="o">((</span><span class="nc">ServletServerHttpResponse</span><span class="o">)</span> <span class="n">serverHttpResponse</span><span class="o">).</span><span class="na">getServletResponse</span><span class="o">(),</span> <span class="n">o</span><span class="o">);</span>
+        <span class="o">}</span>
+        
+        <span class="k">return</span> <span class="n">o</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="24-the-logging-service">2.4. The Logging Service</h2>
+
+<p>You can configure the logging service as you need, implementing this methods:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">LoggingService</span> <span class="o">{</span>
+    
+    <span class="kt">void</span> <span class="nf">logRequest</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">httpServletRequest</span><span class="o">,</span> <span class="nc">Object</span> <span class="n">body</span><span class="o">);</span>
+    
+    <span class="kt">void</span> <span class="nf">logResponse</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">httpServletRequest</span><span class="o">,</span> 
+                     <span class="nc">HttpServletResponse</span> <span class="n">httpServletResponse</span><span class="o">,</span> 
+                     <span class="nc">Object</span> <span class="n">body</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>You can see a concrete implementation in the project in github [1]</p>
+
+<h2 id="3-references">3. References</h2>
+
+<p>[1] Link to the project in <a href="https://github.com/frandorado/spring-projects/tree/master/log-request-response-with-body">Github</a></p>
+
+</div>
+  <br/>
+  <div class="share-page">
+  <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
+
+  <!-- Twitter -->
+  <a href="https://twitter.com/share" class="twitter-share-button" data-via="frandorado">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+  <!-- Google + -->
+  <div class="g-plus" data-action="share" data-annotation="bubble"></div>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+  <!-- Facebook -->
+  <div class="fb-share-button" data-href="http://localhost:4000/spring/2018/11/15/log-request-response-with-body-spring.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+</div>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+</div>
+
+
+  
+    
+      
+        
+          
+            
+            <div class="panel-body">
+              <h4>Related Posts</h4>
+              <ul>
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2020/04/18/spring-upload-file-s3-localstack.html">Spring upload and download files to S3 with localstack</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2020/03/31/spring-actuator-undertow.html">Undertow metrics with Spring Actuator</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2020/02/14/spring-custom-json-transforms.html">Custom deserialization in Spring</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2019/10/11/spring-batch-aws-series-partitioning.html">Spring Batch AWS Series (III): Remote Partitioning</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2019/09/19/spring-batch-aws-series-chunking.html">Spring Batch AWS Series (II): Remote Chunking</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2019/07/29/spring-batch-aws-series-introduction.html">Spring Batch AWS Series (I): Introduction</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+  
+  </ul>
+</div>
+
+
+<div class="PageNavigation">
+  
+    <a class="prev" href="/spring/2018/11/04/log-request-response-with-undertow-spring.html">&laquo; Logging of Requests and Responses in Spring with Undertow (no body)</a>
+  
+  
+    <a class="next" href="/spring/2018/12/17/asyncresttemplate-apache-404.html">AsyncRestTemplate returns 404 (Site Not Found) with Apache HttpComponents &raquo;</a>
+  
+</div>
+  
+
+
+        <footer>
+          
+          <div class="btn-github" style="float:right;">
+            &copy; Francisco Dorado
+          
+            - <a href="https://github.com/frandorado">https://github.com/frandorado</a>
+          
+          </div>
+        </footer>
+      </div>
+      <!-- end /.col-sm-8 -->
+    </div>
+    <!-- end /.container -->
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/super-search.js"></script>
+    <script src="/static/js/thickbox-compressed.js"></script>
+    <script src="/static/js/projects.js"></script>
+
+    <div hidden="true">Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+  </body>
+</html>
+

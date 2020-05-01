@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/static/img/favicon.ico" />
+    
+    <!-- realfavicongenerator -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/static/img/favicons/site.webmanifest">
+    <link rel="mask-icon" href="/static/img/favicons/safari-pinned-tab.svg" color="#2d4f59">
+    <link rel="shortcut icon" href="/static/img/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-config" content="/static/img/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Spring upload and download files to S3 with localstack - Software Developer Blog</title>
+    <meta name="author" content="Francisco Dorado" />
+    <meta name="description" content="Spring upload and download files to S3 with localstack" />
+    <meta name="keywords" content="Spring upload and download files to S3 with localstack, Software Developer Blog, spring" />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+    <meta content="" property="fb:app_id">
+    <meta content="Software Developer Blog" property="og:site_name">
+
+    
+
+    
+      <meta content="Spring upload and download files to S3 with localstack" property="og:title">
+      <meta content="article" property="og:type">
+    
+
+    
+      <meta content="Francisco Dorado - Software Developer" property="og:description">
+    
+
+    
+      <meta content="http://localhost:4000/spring/2020/04/18/spring-upload-file-s3-localstack.html" property="og:url">
+    
+
+    
+      <meta content="2020-04-18T02:00:00+02:00" property="article:published_time">
+      <meta content="http://localhost:4000/about/" property="article:author">
+    
+
+    
+      <meta content="http://localhost:4000/static/img/avatar.jpg" property="og:image">
+    
+
+    
+      
+        <meta content="spring" property="article:section">
+      
+    
+
+    
+      
+        <meta content="spring" property="article:tag">
+      
+        <meta content="s3" property="article:tag">
+      
+        <meta content="localstack" property="article:tag">
+      
+        <meta content="upload" property="article:tag">
+      
+        <meta content="download" property="article:tag">
+      
+    
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@frandorado">
+    <meta name="twitter:creator" content="@frandorado">
+
+    
+      <meta name="twitter:title" content="Spring upload and download files to S3 with localstack">
+    
+
+    
+      <meta name="twitter:url" content="http://localhost:4000/spring/2020/04/18/spring-upload-file-s3-localstack.html">
+    
+
+    
+      <meta name="twitter:description" content="Francisco Dorado - Software Developer">
+    
+
+    
+
+    <!-- Font awesome icons -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+    <!-- syntax highlighting CSS -->
+    <link rel="stylesheet" href="/static/css/syntax.css">
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300italic,300,400italic,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/super-search.css">
+    <link rel="stylesheet" href="/static/css/thickbox.css">
+    <link rel="stylesheet" href="/static/css/projects.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+
+    
+  </head>
+  <body>
+    <div class="container">
+      <div class="col-sm-3">
+        <div class="fixed-condition">
+          <a href="/"><img class="profile-avatar" src="/static/img/avatar.jpg" height="75px" width="75px" /></a>
+          <h1 class="author-name">Francisco Dorado</h1>
+          
+            <div class="profile-about">
+              I am a software developer focused on back-end and specialized in Java and Spring.
+            </div>
+          
+          <div class="social">
+            <ul>
+              
+                <li><a href="https://twitter.com/frandorado" target="_blank"><i class="fa fa-twitter"></i></a></li>
+              
+                <li><a href="https://www.linkedin.com/in/franciscodorado" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+              
+                <li><a href="https://github.com/frandorado" target="_blank"><i class="fa fa-github"></i></a></li>
+              
+            </ul>
+          </div>
+          <div class="search" id="js-search">
+            <input type="text" placeholder="(sitemap)~$ type to search" class="search__input form-control" id="js-search__input">
+            <ul class="search__results" id="js-search__results"></ul>
+          </div>
+          <hr />
+          <ul class="sidebar-nav">
+            <strong>Navigation</strong>
+            <li><a href="/">Home</a></li>
+            
+              <li><a class="about" href="/about/">About Me</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/cv/resume">CV</a></li>
+              
+              
+                <ul class="sidebar-nav">
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/work-experience">Work Experience</a></li>
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/skills">Skills</a></li>
+                  
+                    <li style="margin-left: 15px;"><a class="about" href="/cv/education-training">Education and Training</a></li>
+                  
+                </ul>
+              
+              
+            
+              <li><a class="about" href="/projects/">Projects</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/statistics/">Statistics</a></li>
+              
+              
+              
+            
+              <li><a class="about" href="/feed.xml">Feed RSS</a></li>
+              
+              
+              
+            
+          </ul>
+          <br />
+          <img src="https://doradofran.pythonanywhere.com/count/tag.svg?url=http://localhost:4000/spring/2020/04/18/spring-upload-file-s3-localstack.html" alt="Hits">
+        </div>
+        <!-- end /.fixed-condition -->
+      </div>
+      <div class="col-sm-8 col-offset-1 main-layout">
+        <header class="post-header">
+  <h1 class="post-title">Spring upload and download files to S3 with localstack</h1>
+  <h5>
+    <span class="reading-time" title="Estimated read time">
+  
+  
+    (Reading time: ~1 min)
+  
+</span>
+  </h5>
+</header>
+
+<span class="time">18 Apr 2020</span>
+
+  <span class="categories">
+    &raquo; <a href="/category/spring">spring</a>
+  </span>
+
+
+
+
+
+
+<div class="content">
+  <div class="post"><p><img src="https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/2020-04-18/image.png" alt="files" title="Files" /></p>
+
+<p>In this post we are going to create an example of REST Controllers for upload and download files in AWS S3 using LocalStack.</p>
+
+<h2 id="the-controllers">The controllers</h2>
+
+<p>The upload controller will use a MultipartFile to receive the file. The max filename size could be configured by properties.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@PostMapping(value = “/upload”, produces = “application/json”)
+public ResponseEntity&lt;String&gt; upload(@RequestParam(“file”) MultipartFile file) {
+    String key = storageService.upload(file);
+    return new ResponseEntity&lt;&gt;(key, HttpStatus.OK);
+}
+</code></pre></div></div>
+
+<p>The download controller will return a Resource file.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@GetMapping(“/download”)
+public ResponseEntity&lt;Resource&gt; download(String id) {
+    DownloadedResource downloadedResource = storageService.download(id);
+        
+    return ResponseEntity.ok()
+		.header(HttpHeaders.CONTENT_DISPOSITION, “attachment; filename=“ 
+			+ downloadedResource.getFileName())
+          	.contentLength(downloadedResource.getContentLength())
+		.contentType(MediaType.APPLICATION_OCTET_STREAM)
+          	.body(new InputStreamResource(downloadedResource.getInputStream()));
+}
+</code></pre></div></div>
+
+<h2 id="the-storage-service">The Storage Service</h2>
+
+<p>One storage service will have to provide the implementation for the next interface:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public interface StorageService {
+    
+    String upload(MultipartFile multipartFile);
+    
+    DownloadedResource download(String id);
+}
+</code></pre></div></div>
+
+<p>In our example, we provide a S3StorageService with this implementation and uses AmazonS3 client to upload and upload the file.</p>
+
+<ul>
+  <li>
+    <p>The upload put the object in a bucket in S3 using the InputStream of MultipartFile and add some extra object metadata (content length, content type and file extension)</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  amazonS3.putObject(bucketName, key, multipartFile.getInputStream(), extractObjectMetadata(multipartFile));
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>The download create a DownloadedResource object with all the information stored in S3.</p>
+  </li>
+</ul>
+
+<h2 id="configuration-for-s3-in-localstack">Configuration for S3 in Localstack</h2>
+
+<p>First we should create a docker-compose.yml file where indicates the localstack service with S3 enabled.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - “4572:4572”
+    environment:
+      - SERVICES=s3
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - “${TMPDIR:-/tmp/localstack}:/tmp/localstack”
+      - “/var/run/docker.sock:/var/run/docker.sock”
+</code></pre></div></div>
+
+<p>Then we have to create the AmazonS3 client like that:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@Value(“${aws.s3.endpoint-url}”)
+private String endpointUrl;
+    
+@Bean
+AmazonS3 amazonS3() {
+    EndpointConfiguration endpointConfiguration = new EndpointConfiguration(endpointUrl,
+                Regions.US_EAST_1.getName());
+                
+    return AmazonS3ClientBuilder.standard()
+                                .withEndpointConfiguration(endpointConfiguration)
+                                .withPathStyleAccessEnabled(true).build();
+}
+</code></pre></div></div>
+
+<p>The value for <code class="language-plaintext highlighter-rouge">aws.s3.endpoint-url</code> will be defined in a property file with the value <code class="language-plaintext highlighter-rouge">http://localhost:4572</code></p>
+
+<h1 id="references">References</h1>
+
+<p>[1] <a href="https://github.com/frandorado/spring-projects/tree/master/spring-upload-s3-localstack">Link to the project in Github</a></p>
+
+</div>
+  <br/>
+  <div class="share-page">
+  <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
+
+  <!-- Twitter -->
+  <a href="https://twitter.com/share" class="twitter-share-button" data-via="frandorado">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+  <!-- Google + -->
+  <div class="g-plus" data-action="share" data-annotation="bubble"></div>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+  <!-- Facebook -->
+  <div class="fb-share-button" data-href="http://localhost:4000/spring/2020/04/18/spring-upload-file-s3-localstack.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+</div>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+</div>
+
+
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+            
+            <div class="panel-body">
+              <h4>Related Posts</h4>
+              <ul>
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2020/03/31/spring-actuator-undertow.html">Undertow metrics with Spring Actuator</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2020/02/14/spring-custom-json-transforms.html">Custom deserialization in Spring</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2019/10/11/spring-batch-aws-series-partitioning.html">Spring Batch AWS Series (III): Remote Partitioning</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2019/09/19/spring-batch-aws-series-chunking.html">Spring Batch AWS Series (II): Remote Chunking</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2019/07/29/spring-batch-aws-series-introduction.html">Spring Batch AWS Series (I): Introduction</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+            
+                <li class="relatedPost">
+                  <a href="http://localhost:4000/spring/2019/06/26/spring-reactive-vs-non-reactive-performance.html">Reactive vs Non-Reactive Spring Performance</a>
+                  
+                    (Categories: <a href="/category/spring">spring</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+  
+  
+  </ul>
+</div>
+
+
+<div class="PageNavigation">
+  
+    <a class="prev" href="/spring/2020/03/31/spring-actuator-undertow.html">&laquo; Undertow metrics with Spring Actuator</a>
+  
+  
+</div>
+  
+
+
+        <footer>
+          
+          <div class="btn-github" style="float:right;">
+            &copy; Francisco Dorado
+          
+            - <a href="https://github.com/frandorado">https://github.com/frandorado</a>
+          
+          </div>
+        </footer>
+      </div>
+      <!-- end /.col-sm-8 -->
+    </div>
+    <!-- end /.container -->
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/super-search.js"></script>
+    <script src="/static/js/thickbox-compressed.js"></script>
+    <script src="/static/js/projects.js"></script>
+
+    <div hidden="true">Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+  </body>
+</html>
+
