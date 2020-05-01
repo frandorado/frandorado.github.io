@@ -62,8 +62,8 @@ ga('send', 'pageview');
         <!-- Begin Menu -->
 
             <ul class="navbar-nav ml-auto">
-
-                {% if page.url == "/" %}
+                
+                {% if page.url == "/" or layout contains "post" %}
                 <li class="nav-item active">
                 {% else %}
                 <li class="nav-item">
@@ -71,7 +71,7 @@ ga('send', 'pageview');
                 <a class="nav-link" href="{{ site.baseurl }}/index.html">Blog</a>
                 </li>
 
-                {% if page.url == "/projects" %}
+                {% if page.url contains "/project" %}
                 <li class="nav-item active">
                 {% else %}
                 <li class="nav-item">
@@ -79,7 +79,7 @@ ga('send', 'pageview');
                     <a class="nav-link" href="{{ site.baseurl }}/projects">Projects</a>
                 </li>
                 
-                {% if page.url == "/cv" %}
+                {% if page.url contains "/cv" %}
                 <li class="nav-item active">
                 {% else %}
                 <li class="nav-item">
