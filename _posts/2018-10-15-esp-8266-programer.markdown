@@ -1,0 +1,45 @@
+---
+layout: post
+title:  "Programing ESP-8266"
+author: frandorado
+categories: [iot]
+tags: [iot, arduino, esp8266, home assistant, FT232RL, ESP-8266]
+image: assets/images/posts/2018-10-15/esp8266_programming.png
+toc: true
+---
+
+On the web we can find differents ways to program a ESP-8266 but in this post I'll show you what way it works for me.
+
+## Prerequisites
+
+* You will need a TTL to USB interface (for example FTDI FT232RL) or you could use the Arduino Uno. In this post we'll use the Arduino UNO.
+* The Arduino IDE configured for working with ESP-8266. There are a lot of tutorials about this. 
+
+## ESP-8266 in programing mode
+
+Steps to connect:
+
+1. Connect `TX` to `RX`
+2. Connect `RX` to `TX`
+3. Connect `VCC` and `CH-PD` to `+`
+4. Connect `GND` and `GPIO0` to `-`
+Run the Arduino IDE and before upload the code you must change to programming mode:
+5. Connect and disconnect `Reset` to `-`. You will can see a blue light in the ESP-8266 that will indicate that you are in programming mode.
+
+
+### Arduino UNO
+
+With arduino you could use the 3,3V as `+`, the `GND` as `-`, and the ports `RX` and `TX` for the transfer.
+
+> NOTE: It's important that you connect permanently the `reset` port to `-` in Arduino for program the ESP-8266.
+
+## Custom Programmer
+
+I've built with a board a programmer with a reset button that will ease the steps indicated before. This is the result.
+
+![ESP-8266]({{site.url}}/assets/images/posts/2018-10-15/esp8266_1.jpg "ESP-8266")
+
+![ESP-8266]({{site.url}}/assets/images/posts/2018-10-15/esp8266_2.jpg "ESP-8266")
+
+![ESP-8266]({{site.url}}/assets/images/posts/2018-10-15/esp8266_3.jpg "ESP-8266")
+
