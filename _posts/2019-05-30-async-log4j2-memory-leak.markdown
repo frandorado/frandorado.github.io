@@ -1,12 +1,12 @@
 ---
 layout: post
 title:  "Async Log4j2, memory leak?"
-date:   2019-05-30 02:00:00 +0200
-published: true
+author: frandorado
 categories: [spring]
 tags: [spring, log4j, log4j2, async, apache, logging, memory, leak]
+image: assets/images/posts/2019-05-30/memory-leak.png
+toc: true
 ---
-![Memory Leak](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/memory-leak.png "Memory Leak")
 
 Recently in a project that we are been working on, we found a significant increment in the boot time of a Spring Boot application. This happened when we activated asynchronous logs with Apache Log4j2.
 
@@ -15,11 +15,11 @@ In order to improve the performance in our application, we decided to use Apache
 
 Analyzing with `jvisualvm` and making a memory dump of our application in asynchronous mode we found that ~40Mb of memory is used by `RingBufferLogEvent`:
 
-![Async log](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/async-log-memory.png "Async log")
+![Async log]({{site.url}}/assets/images/posts/2019-05-30/async-log-memory.png "Async log")
 
 However, making a memory dump using synchronous mode we foud this:
 
-![Sync log](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/sync-memory-log.png "Sync log")
+![Sync log]({{site.url}}/assets/images/posts/2019-05-30/sync-memory-log.png "Sync log")
 
 ## Why
 The implementation of Apache Log4j2 in async mode uses a RingBuffer to buffering all the logs content. By default uses 262144 slots (256 * 1024). This causes an initial memory reserve of approximately 40 megabytes and in a environment with a limited memory causes the memory head to be always full and therefore the starting slowdown.

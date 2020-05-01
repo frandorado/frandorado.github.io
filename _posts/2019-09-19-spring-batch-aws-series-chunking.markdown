@@ -1,37 +1,29 @@
 ---
 layout: post
 title:  "Spring Batch AWS Series (II): Remote Chunking"
-date:   2019-09-19 02:00:00 +0200
-published: true
+author: frandorado
 categories: [spring]
 tags: [spring, batch, integration, aws, remote, partitioning, chunking, sqs]
+image: assets/images/posts/2019-09-19/remotechunking.png
+toc: true
 ---
 
-![Remote Chunking](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/springbatchaws/remotechunking.png "Remote Chunking")
 
 In this post we are going to implement the first step of our Spring Batch AWS Series using Remote Chunking. This step will send a chunk of numbers and the slaves will log the numbers that are prime. 
 
-## Table of contents
 
-1. [Description](#section1)
-2. [Common configuration](#section2)
-3. [Master project](#section3)
-4. [Slave project](#section4)
-5. [How to run](#section5)
-6. [References](#section6)
-
-## <a name="section1"></a>1. Description
+## Description
 
 In Remote Chunking the Step processing is split across multiple processes, in our case communicating with each other using AWS SQS. This pattern is useful when the Master is not a bottleneck
 
-![Remote Chunking detailed](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/springbatchaws/remotechunking2.png "Remote Chunking detailed")
+![Remote Chunking detailed]({{site.url}}/assets/images/posts/2019-09-19/remotechunking2.png "Remote Chunking detailed")
 
 With Remote Chunking the data is read by the `master` and sent to the `slaves` using SQS for processing. Once the process finishes, the result of the slaves will be returned to the master.
 
 * `Master` does all the I/O operations
 * `Slave` doesn't need database access to get the information. This arrives through SQS messages.
 
-## <a name="section2"></a>2. Common configuration
+## Common configuration
 
 We need to configure next tools:
 
@@ -69,7 +61,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
 ```
 
-## <a name="section3"></a>3. Master project
+## Master project
 
 This section shows the most important aspect of our master application, how to comunicate the requests and responses with the slave.
 
@@ -105,7 +97,7 @@ public IntegrationFlow step1ResponseIntegrationFlow() {
 2. Transform the received json in `ChunkResponse` using `JsonToChunkResponseTransformer`
 3. Send the `ChunkResponse` to `step1ResponseMessageChannel` that is configured in `ChunkMessageChannelItemWriter` as reply channel. Now Spring will mark the step with the result received.
 
-## <a name="section4"></a>4. Slave project
+## Slave project
 
 This section shows the communication with the master.
 
@@ -143,7 +135,7 @@ public IntegrationFlow step1ResponseIntegrationFlow() {
 2. Transform the object in json using `ChunkResponseToJsonTransformer`
 3. Send the previous message to response queue in SQS.
 
-## <a name="section5"></a>5. How to run
+## How to run
 
 * Run the docker-compose.yml file
   * `docker-compose up`
@@ -162,11 +154,11 @@ public IntegrationFlow step1ResponseIntegrationFlow() {
 
 * Run the master using the main application `com.frandorado.springbatchawsintegrationmaster.SpringBatchAwsIntegrationMasterApplication`
 
-## <a name="section6"></a>6. References
+## References
 
 [1] [Link to the project in Github](https://github.com/frandorado/spring-projects/tree/master/spring-batch-aws-integration)
 
-[2] [Spring Batch AWS Series (I): Introduction](https://frandorado.github.io/spring/2019/07/29/spring-batch-aws-series-introduction.html)
+[2] [Spring Batch AWS Series (I): Introduction]({{site.url}}/spring/2019/07/29/spring-batch-aws-series-introduction.html)
 
 [3] [Spring Batch Framework](https://github.com/spring-projects/spring-batch)
 

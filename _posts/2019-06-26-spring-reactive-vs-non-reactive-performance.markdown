@@ -1,13 +1,12 @@
 ---
 layout: post
 title:  "Reactive vs Non-Reactive Spring Performance"
-date:   2019-06-26 02:00:00 +0200
-published: true
+author: frandorado
 categories: [spring]
 tags: [spring, reactive, performance, mvc, webflux, mono, flux, stack]
+image: assets/images/posts/2019-06-26/spring-mvc-webflux-chart.png
+toc: true
 ---
-
-![Result Chart](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/spring-mvc-webflux-chart.png "Results Chart")
 
 The goal of this article is to compare the performance between Spring MVC (Non-Reactive) and Spring WebFlux (Reactive). For this task we have taken into account three differents implementations:
 
@@ -82,7 +81,7 @@ Hardware:
 
 The results shown in the following table refer to a one-minute execution with a one-second ramp-up period.
 
-![Result Table](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/spring-mvc-webflux-table.png "Result Table")
+![Result Table]({{site.url}}/assets/images/posts/2019-06-26/spring-mvc-webflux-table.png "Result Table")
 
 Now, we can extract the following conclusions based in our tests:
 

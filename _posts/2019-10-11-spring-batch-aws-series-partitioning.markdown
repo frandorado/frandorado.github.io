@@ -1,26 +1,17 @@
 ---
 layout: post
 title:  "Spring Batch AWS Series (III): Remote Partitioning"
-date:   2019-10-11 02:00:00 +0200
-published: true
+author: frandorado
 categories: [spring]
 tags: [spring, batch, integration, aws, remote, partitioning, chunking, sqs]
+image: assets/images/posts/2019-10-11/remotepartitioning.png
+toc: true
 ---
 
 In this post we are going to implement our second step using remote partitioning strategy. The goal of this step is to calculate the next probable prime given a number.
 
-![Remote Partitioning](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/springbatchaws/remotepartitioning.png "Remote Partitioning")
 
-## Table of contents
-
-1. [Description](#section1)
-2. [Master project](#section2)
-3. [Slave project](#section3)
-4. [Results](#section4)
-5. [How to run](#section5)
-6. [References](#section6)
-
-## <a name="section1"></a>1. Description
+## Description
 
 Remote Partition is similar to remote chunking because receives messages from a SQS queue but the response is not sent to other SQS queue. The context information is stored in database instead of message. The process is as follow:
 
@@ -29,7 +20,7 @@ Remote Partition is similar to remote chunking because receives messages from a 
 3. The slave marks in DB as completed when finishes the work.
 4. When all the partitions are completed, the master continue to the next step.
 
-## <a name="section2"></a>2. Master project
+## Master project
 
 The master project will store the partition info in the database and will send a message to the slaves by each partition. Meanwhile it will check in database if all the slaves have finished. We could configure a timeout for the case that some slave don't response.
 
@@ -73,7 +64,7 @@ public PartitionHandler buildPartitionHandler() {
 }
 ```
 
-## <a name="section3"></a>3. Slave project
+## Slave project
 
 **"Slave => Master" Integration Flow**
 
@@ -103,7 +94,7 @@ private StepExecutionRequestHandler buildStepExecutionRequestHandler() {
 
 In this case the slave will indicate in database when its work has been finished so it's not necessary to use a response queue.
 
-## <a name="section4"></a>4. Results
+## Results
 
 This is a example logs for an execution with 10 partitions with random numbers.
 
@@ -120,7 +111,7 @@ The number received is 3493 and the next probable prime is 3499
 The number received is 2535 and the next probable prime is 2539
 ```
 
-## <a name="section5"></a>5. How to run
+## How to run
 
 * Run the docker-compose.yml file
   * `docker-compose up`
@@ -136,12 +127,12 @@ The number received is 2535 and the next probable prime is 2539
 
 * Run the master using the main application `com.frandorado.springbatchawsintegrationmaster.SpringBatchAwsIntegrationMasterApplication`
 
-## <a name="section6"></a>6. References
+## References
 
 [1] [Link to the project in Github](https://github.com/frandorado/spring-projects/tree/master/spring-batch-aws-integration)
 
-[2] [Spring Batch AWS Series (I): Introduction](https://frandorado.github.io/spring/2019/07/29/spring-batch-aws-series-introduction.html)
+[2] [Spring Batch AWS Series (I): Introduction]({{site.url}}/spring/2019/07/29/spring-batch-aws-series-introduction.html)
 
-[3] [Spring Batch AWS Series (II): Remote Chunking](https://frandorado.github.io/spring/2019/09/19/spring-batch-aws-series-chunking.html)
+[3] [Spring Batch AWS Series (II): Remote Chunking]({{site.url}}/spring/2019/09/19/spring-batch-aws-series-chunking.html)
 
 [4] [Spring Batch Framework](https://github.com/spring-projects/spring-batch)

@@ -1,21 +1,16 @@
 ---
 layout: post
 title:  "Control of RST01BL Bluetooth Light Bulb with Home Assistant"
-date:   2018-09-30 11:00:00 +0200
+author: frandorado
 categories: [iot]
 tags: [iot, arduino, RST01BL, bluetooth, home assistant, bulb]
+image: assets/images/posts/2018-09-30/header.jpg
+toc: true
 ---
 
 This project provides to be a guide for the control of the RST01BL bluetooth light bulb and its integration with [Home Assistant](https://home-assistant.io/)
 
-## Table of contents
-
-1. [Prerequisites](#section1)
-2. [How to use](#section2)
-3. [Home assistant integration](#section3)
-4. [References](#section4)
-
-## <a name="section1"></a> 1. Prerequisites
+## Prerequisites
 
 We need to follow the next steps before use the bluetooth bulb.
 
@@ -23,9 +18,9 @@ We need to follow the next steps before use the bluetooth bulb.
 * Install the pexpect library, 'sudo pip install pexpect'.
 * Install gatttool
 
-## <a name="section2"></a> 2. How to use
+## How to use
 
-### 2.1. Turn On
+### Turn On
 
 From python script:
 
@@ -42,7 +37,7 @@ From console:
 > quit
 ```
 
-### 2.2. Turn Off
+### Turn Off
 
 ```
 > sudo python stop-light.py XX:XX:XX:XX:XX:XX
@@ -57,7 +52,7 @@ From console:
 > quit
 ```
 
-### 2.3. RGB Color
+### RGB Color
 
 We'll use 14 hex digits to change the color following the next pattern:
 
@@ -69,7 +64,7 @@ We'll use 14 hex digits to change the color following the next pattern:
 
 * The `YY` indicates if we want color (F0) or white ligth (0F). If we choose the white ligth value (F0) the `XX XX XX` value will be ignored. 
 
-### 2.4. Examples
+### Examples
 
 * Turn on
 ```
@@ -91,7 +86,7 @@ char_write_cmd 0x0043 56FFFFFF000FAA
 char_write_cmd 0x0043 560000FF00F0AA
 ```
 
-## <a name="section3"></a> 3. Home assistant integration
+## Home assistant integration
 
 ```yaml
 switch:
@@ -102,7 +97,7 @@ switch:
          offcmd: "sudo python ~/.homeassistant/stop-light.py XX:XX:XX:XX:XX:XX"   
 ```
 
-## <a name="section4"></a> 4. References
+## References
 
 [1] Link to the project in [Github][github-link]
 

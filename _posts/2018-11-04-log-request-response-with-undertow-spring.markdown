@@ -1,10 +1,11 @@
 ---
 layout: post
 title:  "Logging of Requests and Responses in Spring with Undertow (no body)"
-date:   2018-11-04 02:00:00 +0200
-published: true
+author: frandorado
 categories: [spring]
 tags: [spring, logging, request, response, java, body, undertow, RequestDumpingHandler, undertow]
+image: assets/images/posts/2018-11-04/header.jpg
+toc: true
 ---
 
 In this post we're going to configure Undertow as embedded server in our Spring Boot Application. Then we'll trace in logs all the requests and responses of our controllers.

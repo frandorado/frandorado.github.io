@@ -1,68 +1,76 @@
-title: Software Developer Blog
-description: Francisco Dorado - Software Developer
-author: Francisco Dorado
-github: https://github.com/frandorado
-about: I am a software developer focused on back-end and specialized in Java and Spring.
-disqus_shortname: frandorado
-google_analytics: UA-XXXXXXXX-Y
-avatar_url: /static/img/avatar.jpg
+# Site
+name: "Francisco Dorado"
+title: "Francisco Dorado - Software Architect"
+description: "Software Architect focused on back-end and specialized in Java and Spring."
+logo: 'assets/images/logo.png'
+favicon: 'assets/images/logo.png'
+baseurl: ''
+#google_analytics: 'UA-46278016-1'
+disqus: 'frandorado'
+mailchimp-list: 'https://github.us8.list-manage.com/subscribe/post?u=5072924fb3fe24917b8a6edfc&amp;id=7284b8fc21'
+include: ["_pages"]
+permalink: /:title/
 
-enableTags: true
-tagarray: []
+# Authors
+authors:
+  frandorado:
+    name: Francisco Dorado
+    display_name: Francisco Dorado
+    avatar: 'assets/images/avatar.png'
+    #gravatar: e56154546cf4be74e393c62d1ae9f9d4
+    email: doradofran@gmail.com
+    web: https://www.linkedin.com/in/franciscodorado/
+    twitter: https://twitter.com/frandorado
+    description: "Software Architect at sngular.com in Seville. Specialised in backend technologies based in the Java ecosystem. Currently working on Microservices using Spring Framework and AWS Cloud technologies"
 
-collections:
-  project:
-    output: true
-    permalink: /project/:path/
-  cv:
-    output: true
-    permalink: /cv/:path/
-
-social:
-    - icon: fa-twitter
-      link: "https://twitter.com/frandorado"
-    - icon: fa-linkedin
-      link: "https://www.linkedin.com/in/franciscodorado"
-    - icon: fa-github
-      link: "https://github.com/frandorado"
-
-share:
-  twitter_username: frandorado
-
-urls:
-    - text: About Me
-      url: /about/
-    - text: CV
-      url: /cv/resume
-      childs:
-        - text: Work Experience
-          url: /cv/work-experience
-        - text: Skills
-          url: /cv/skills
-        - text: Education and Training
-          url: /cv/education-training
-    - text: Projects
-      url: /projects/
-    - text: Statistics
-      url: /statistics/
-    - text: Feed RSS
-      url: /feed.xml
-
-url: "https://frandorado.github.io"
-baseurl: ""
-counterUrl: "https://doradofran.pythonanywhere.com"
-paginate: 20
-per_page: 20
-paginate_path: "/page/:num/"
-markdown: kramdown
+# Plugins
 plugins:
   - jekyll-paginate
-  - jekyll-gist
+  - jekyll-sitemap
   - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-archives
+    
+# Archives
+jekyll-archives:
+  enabled:
+    - categories
+  layout: archive
+  permalinks:
+    category: '/category/:name/'
+    
+# Pagination 
+paginate: 6
+paginate_path: /page:num/
+    
+# Other
+markdown: kramdown
 
-compress_html:
-  clippings: all
-  comments: ["<!-- ", " -->"]
-  endings: all
-  ignore:
-    envs: ['development']
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
+
+# Adsense (change to "enabled" to activate, also your client id and ad slot. Create a new ad unit from your Adsense account to get the slot.)
+adsense: "disabled"
+#adsense-data-ad-client: "ca-pub-3412143450191416"
+#adsense-data-ad-slot: "1363087678"
+
+# Lazy Images ("enabled" or "disabled")
+lazyimages: "disabled"
+
+exclude: [changelog.md, LICENSE.txt, README.md, Gemfile, Gemfile.lock]
+
+collections:
+  projects:
+    output: true
+    permalink: /project/:path/
+      
+  posts:
+    output: true
+    permalink: /:categories/:year/:month/:day/:title:output_ext
+
+statisticsUrl: "https://doradofran.pythonanywhere.com"
+

@@ -1,19 +1,18 @@
 ---
 layout: post
 title:  "Circuit Breaker with Resilience4j and Spring"
-date:   2019-01-04 02:00:00 +0200
-published: true
+author: frandorado
 categories: [spring]
 tags: [spring, resilience4j, circuit breaker]
+image: assets/images/posts/2019-01-04/circuitbreaker-resilience4j-spring.png
+toc: true
 ---
-
-![Circuit Breaker](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/circuitbreaker-resilience4j-spring.png "Circuit Breaker")
 
 When a remote service is down the [Circuit Breaker][circuitbreaker-martinfowler-link] pattern prevents a cascade of failures. After a number of failed attempts, we can consider that the service is unavailable/overloaded and reject all subsequent requests to it. The Circuit Breaker acts like a switch that opens or closes a circuit.
 
 In this post we'll talk about the `resilience4j` library that allows us to apply this pattern.
 
-## 1. Dependencies
+## Dependencies
 
 Add the next dependencies to your `pom.xml`
 
@@ -36,7 +35,7 @@ Add the next dependencies to your `pom.xml`
 </dependencies>
 ```
 
-## 2. Configuration
+## Configuration
 
 For the next configuration we have defined two circuit breaker configurations, `default` and `serviceA`.
 
@@ -64,8 +63,8 @@ resilience4j.circuitbreaker:
 * **waitInterval**: The wait duration in millis which defines how long the CircuitBreaker should stay open before it switches to half open
 * **failureRateThreshold**: The failure rate threshold above which the CircuitBreaker opens and starts short-circuiting calls
 
-## 3. Example of Circuit Breaker
-### 3.1. The test
+## Example of Circuit Breaker
+### The test
 
 We'll call to a Consumer that iterate 5 times executing a method that will throw an exception. We will log:
 * The begin of method "Entering in service ..."
@@ -84,7 +83,7 @@ private static final Consumer<Runnable> consumer = runnable -> IntStream.range(0
 });
 ```
 
-### 3.2. Circuit Breaker using annotations
+### Circuit Breaker using annotations
 
 You could annotate the method or the entire class with `@CircuitBreaker` annotation. Example for method annotation with `serviceA` configuration.
 
@@ -107,7 +106,7 @@ An example of 5 invocations to a method that always throws exception, the Circui
 2019-01-02 20:15:28.107  WARN ... : Circuit breaker applied
 ```
 
-### 3.3. Circuit Breaker with direct invocation
+### Circuit Breaker with direct invocation
 
 You can decorate any Supplier / Runnable / Function or CheckedRunnable / CheckedFunction function with CircuitBreaker.decorateCheckedSupplier(), CircuitBreaker.decorateCheckedRunnable() or CircuitBreaker.decorateCheckedFunction()
 

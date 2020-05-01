@@ -1,13 +1,12 @@
 ---
 layout: post
 title:  "AsyncRestTemplate returns 404 (Site Not Found) with Apache HttpComponents"
-date:   2018-12-17 02:00:00 +0200
-published: true
+author: frandorado
 categories: [spring]
-tags: [spring, asyncresttemplate, apache, factory, HttpComponentsAsyncClientHttpRequestFactory, site not found, 404]
+tags: [spring, asyncresttemplate, apache, factory, HttpComponentsAsyncClientHttpRequestFactory, site not found, "404"]
+image: assets/images/posts/2018-12-17/asyncresttemplate-apache-404.png
+toc: true
 ---
-
-![404 Not Found](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/asyncresttemplate-apache-404.png "404 Not Found")
 
 When you create an `AsyncRestTemplate`, Spring uses `SimpleClientHttpRequestFactory` by default which depends on default configuration of `HttpURLConnection`. This implementation doesn't have connection pooling.
 

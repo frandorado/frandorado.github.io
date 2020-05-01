@@ -1,13 +1,13 @@
 ---
 layout: post
 title:  Spring upload and download files to S3 with localstack
-date:   2020-04-18 02:00:00 +0200
-published: true
+author: frandorado
 categories: [spring]
 tags: [spring, s3, localstack, upload, download]
+image: assets/images/posts/2020-04-18/image.png
+toc: true
+hidden: true
 ---
-
-![files](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/2020-04-18/image.png "Files")
 
 
 In this post we are going to create an example of REST Controllers for upload and download files in AWS S3 using LocalStack.

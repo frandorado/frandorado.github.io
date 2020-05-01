@@ -1,13 +1,14 @@
 ---
 layout: post
 title:  "Custom deserialization in Spring"
-date:   2020-02-14 02:00:00 +0200
-published: true
+author: frandorado
 categories: [spring]
 tags: [spring, jackson, custom, deserialization, objectmapper, json]
+image: assets/images/posts/2020-02-14/custom-deserialization.png
+toc: true
 ---
 
-![Custom deserialization](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/custom-deserialization-deserialization-spring/custom-deserialization.png "Custom deserialization")
+This post try to resolve a problem where given a REST service with a already defined API, we want to add new API that uses the same service and without implement new logic.
 
 ## The problem
 

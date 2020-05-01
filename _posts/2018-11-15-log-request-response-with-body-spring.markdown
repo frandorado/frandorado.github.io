@@ -1,19 +1,20 @@
 ---
 layout: post
 title:  "Logging Requests and Responses in Spring (including body)"
-date:   2018-11-15 02:00:00 +0200
-published: true
+author: frandorado
 categories: [spring]
 tags: [spring, logging, request, response, java, body]
+image: assets/images/posts/2018-11-15/header.jpg
+toc: true
 ---
 
 Recently we have found some problems trying to log a complete Request and Response in a Spring Application. When we talk about a "complete Request and Response" we are indicating that we want to include the content of body. In this post we will talk about how to resolve this problem.
 
-## 1. Alternatives
+## Alternatives
 
 When you look for differents alternatives to log the request and response you could find the next solutions:
 
-### 1.1. Using the embedded server (Tomcat, Jetty, Undertow)
+### Using the embedded server (Tomcat, Jetty, Undertow)
 
 This is a good solution if you don't need to log the value of body. If you want an example with Undertow you can see my previous post about this [Logging Request and Response with Undertow](........)
 
@@ -59,7 +60,7 @@ This is a good solution if you don't need to log the value of body. If you want 
     * It doesn't include the body
     * We can't define the template for log
 
-### 1.2. Using CommonsRequestLoggingFilter
+### Using CommonsRequestLoggingFilter
 
 The same than before, there is a [Bug](https://github.com/grails/grails-core/issues/11024) with Spring Boot (< 2.0) that doesn't print the content of body. Furthermore only will log the request.
 
@@ -92,7 +93,7 @@ The same than before, there is a [Bug](https://github.com/grails/grails-core/iss
 
 
 
-### 1.3. Using a handler interceptor
+### Using a handler interceptor
 
 You could read the value of body in the Request in `preHandle` method of a `HandlerInterceptor`. This has the problem that the InputStream only can read once. Other solutions that I have found to avoid this is using a `ContentCachingRequestWrapper` but this didn't work for me.
 
@@ -132,9 +133,9 @@ public class CustomHandlerInterceptorAdapter extends HandlerInterceptorAdapter {
 * Disadvantages
     * The Request can't be read twice and we can't log the body.
 
-## 2. Our solution
+## Our solution
 
-### 2.1. Logging requests (GET methods)
+### Logging requests (GET methods)
 
 The GET methods don't contain body so we'll use a HandlerInterceptor for this case.
 
@@ -159,7 +160,7 @@ public class LogInterceptor implements HandlerInterceptor {
 }
 ```
 
-### 2.2. Logging requests (POST, PUT, PATCH, DELETE ...)
+### Logging requests (POST, PUT, PATCH, DELETE ...)
 
 For others methods that contains a body, we'll use RequestBodyAdviceAdapter.
 
@@ -190,7 +191,7 @@ public class CustomRequestBodyAdviceAdapter extends RequestBodyAdviceAdapter {
     }
 }
 ```
-## 2.3. Logging responses
+## Logging responses
 
 ```java
 @ControllerAdvice
@@ -225,7 +226,7 @@ public class CustomResponseBodyAdviceAdapter implements ResponseBodyAdvice<Objec
 }
 ```
 
-## 2.4. The Logging Service
+## The Logging Service
 
 You can configure the logging service as you need, implementing this methods:
 
@@ -242,7 +243,7 @@ public interface LoggingService {
 
 You can see a concrete implementation in the project in github [1]
 
-## 3. References
+## References
 
 [1] Link to the project in [Github][github-link]
 

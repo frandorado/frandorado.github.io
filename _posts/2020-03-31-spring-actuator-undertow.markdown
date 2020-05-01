@@ -1,13 +1,12 @@
 ---
 layout: post
 title:  "Undertow metrics with Spring Actuator"
-date:   2020-03-31 02:00:00 +0200
-published: true
+author: frandorado
 categories: [spring]
 tags: [spring, undertow, metrics, actuator, micrometer]
+image: assets/images/posts/2020-03-31/spring-actuator-undertow.png
+toc: true
 ---
-
-![Metrics](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/2020-03-31/spring-actuator-undertow.png "Metrics")
 
 This post is intended to show a possible solution to provide metrics of Undertow with Spring Actuator (Micrometer). Undertow provides its own metric collector, but we have encountered one issue where the values of these metrics are not being updated correctly because when we make a request the collector is incrementing the counter in two units instead of one. Consequently, we have created our own solution based on Undertow metrics collector where we providing next metrics:
 
@@ -116,7 +115,7 @@ private void bindCounter(MeterRegistry registry, String name, String desc, Metri
 
 In [1] it is available the project to test this metrics. We have used JMX Meter Binder and you can check the results using `jconsole`
 
-![JConsole](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/2020-03-31/jconsole.png "JConsole")
+![JConsole]({{site.url}}/assets/images/posts/2020-03-31/jconsole.png "JConsole")
 
 
 ## References

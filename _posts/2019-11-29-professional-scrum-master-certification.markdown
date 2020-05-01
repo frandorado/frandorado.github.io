@@ -1,13 +1,12 @@
 ---
 layout: post
 title:  "Professional Scrum Master Certification (PSM I)"
-date:   2019-11-29 02:00:00 +0200
-published: true
+author: frandorado
 categories: [others]
 tags: [psm i, psm, scrum, scrum.org, master, professional, certification]
+image: assets/images/posts/2019-11-29/psm1.png
+toc: false
 ---
-
-![PSM I](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/psm1/psm1.png "PSM I")
 
 A few days ago I passed Professional Scrum Master (PSM I) exam in scrum.org. This post pretends to be a reference path to pass the exam sucessfully based on my personal experience. In my case I had an in-company training but I think that it's possible to pass the exam without classes following next steps:
 

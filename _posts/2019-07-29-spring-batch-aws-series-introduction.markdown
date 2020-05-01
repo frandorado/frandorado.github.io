@@ -1,13 +1,12 @@
 ---
 layout: post
 title:  "Spring Batch AWS Series (I): Introduction"
-date:   2019-07-29 02:00:00 +0200
-published: true
+author: frandorado
 categories: [spring]
 tags: [spring, batch, integration, aws, remote, partitioning, chunking]
+image: assets/images/posts/2019-07-29/steps.png
+toc: true
 ---
-
-![Steps](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/steps.png "Steps")
 
 This entry is the first in a series of posts about how to process different steps in Spring Batch **remotely**. In this project we are going to use Amazon SQS as communication channel between the remote processes.
 
@@ -15,8 +14,8 @@ This entry is the first in a series of posts about how to process different step
 
 Spring Batch is a processing framework designed for robust execution of jobs. Each job is divided in steps and each step could be executed in a remote way using slaves. There are differents strategies to do this:
 
-* **Remote Chunking:** This strategy is useful when we don't have bottleneck in reading or writing. [Spring Batch AWS Series (II): Remote Chunking](https://frandorado.github.io/spring/2019/09/19/spring-batch-aws-series-chunking.html)
-* **Remote Partitioning:** This strategy is useful when the bottleneck is in reading or writing. [Spring Batch AWS Series (III): Remote Partitioning](https://frandorado.github.io/spring/2019/10/11/spring-batch-aws-series-partitioning.html)
+* **Remote Chunking:** This strategy is useful when we don't have bottleneck in reading or writing. [Spring Batch AWS Series (II): Remote Chunking]({{site.url}}/spring/2019/09/19/spring-batch-aws-series-chunking.html)
+* **Remote Partitioning:** This strategy is useful when the bottleneck is in reading or writing. [Spring Batch AWS Series (III): Remote Partitioning]({{site.url}}/spring/2019/10/11/spring-batch-aws-series-partitioning.html)
 
 ## The project
 

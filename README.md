@@ -1,5 +1,5 @@
 ## Personal blog
 
-Version 1 of my blog based in agusmakmun/agusmakmun.github.io
+Version 2 of my blog based in wowthemesnet/mediumish-theme-jekyll
 
-![Main](./static/img/blog-v1.png "Main")
+![Main](./assets/images/blog-v2.png "Main")

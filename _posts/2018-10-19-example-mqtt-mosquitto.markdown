@@ -1,10 +1,11 @@
 ---
 layout: post
 title:  "Example of MQTT with Mosquitto"
-date:   2018-10-19 02:00:00 +0200
-published: true
+author: frandorado
 categories: [iot]
 tags: [iot, arduino, mqtt, mosquitto, example]
+image: assets/images/posts/2018-10-19/header.png
+toc: true
 ---
 
 Mosquitto is a message broker that implements the MQTT protocol. MQTT is very used in IOT to share info between devices. In this post we will simulate a communication between a subscriber (for example a wifi light bulb) and a publisher (a device invoking "turn on" or "turn off" the light)

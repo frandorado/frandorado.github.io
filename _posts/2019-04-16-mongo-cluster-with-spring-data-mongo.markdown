@@ -1,17 +1,16 @@
 ---
 layout: post
 title:  "Spring Data Mongo using Mongo Cluster with Docker"
-date:   2019-04-16 02:00:00 +0200
-published: true
+author: frandorado
 categories: [spring]
 tags: [spring, mongodb, cluster, replicaset, docker, mongo, docker-compose]
+image: assets/images/posts/2019-04-16/mongo-cluster-with-spring-data-mongo.png
+toc: true
 ---
-
-![MongoDB Replicaset](https://raw.githubusercontent.com/frandorado/frandorado.github.io/master/static/img/_posts/mongo-cluster-with-spring-data-mongo.png "MongoDB Replicaset")
 
 In this post we are going to talk about how to configure a MongoDB Cluster in local using docker-compose and how to use it with Spring Data Mongo.
 
-## 1. Configure the Replica Set
+## Configure the Replica Set
 
 For our example, we are going to configure a Replica Set with 3 nodes as shown in the following `docker-compose.yml` file:
 
@@ -58,7 +57,7 @@ Once your Mongo containers are running, the final step is to configure the Clust
 > docker-compose exec mongo1 mongo --eval "rs.initiate({_id : 'rs0','members' : [{_id : 0, host : 'mongo1:27017'},{_id : 1, host : 'mongo2:27018'},{_id : 2, host : 'mongo3:27019'}]})"
 ```
 
-## 2. Connect to the cluster
+## Connect to the cluster
 
 Firsly, modify your `/etc/hosts` file adding:
 
@@ -74,7 +73,7 @@ Now you can connect to the Cluster with the next url:
 mongodb://mongo1:27017,mongo2:27018,mongo3:27019/?replicaSet=rs0
 ```
 
-## 3. Testing in a Spring Boot Application
+## Testing in a Spring Boot Application
 
 You could see a complete example of use in [Github][github-link]
 
