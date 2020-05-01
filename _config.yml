@@ -5,8 +5,8 @@ description: "Software Architect focused on back-end and specialized in Java and
 logo: 'assets/images/logo.png'
 favicon: 'assets/images/logo.png'
 baseurl: ''
-#google_analytics: 'UA-46278016-1'
-disqus: 'frandorado'
+google_analytics: 'UA-164934904-1'
+disqus: frandorado
 mailchimp-list: 'https://github.us8.list-manage.com/subscribe/post?u=5072924fb3fe24917b8a6edfc&amp;id=7284b8fc21'
 include: ["_pages"]
 permalink: /:title/
