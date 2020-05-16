@@ -50,7 +50,7 @@ _Pros and cons:_
 Other option I found for coding on iPad is Gitpod. This tool works great and its free option is enough for small changes in personal projects. It connects with Github and Gitlab and doesn’t require any complex configuration. You only need:
 
 1. Login with your GitHub/Gitlab account
-2. Enter in `gitpod.io/#XXXXXXX` where you have to replase `XXXXXX` for the url of your github or gitlab repository.
+2. Enter in `gitpod.io/#XXXXXXX` where you have to replace `XXXXXX` for the url of your github or gitlab repository.
 
 _Pros and cons:_
 * (+) Easy configuration
