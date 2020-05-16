@@ -5,7 +5,7 @@ author: frandorado
 categories: []
 image: assets/images/posts/2020-05-02/header.jpg
 toc: false
-hidden: true
+hidden: false
 ---
 
 I’m happy to announce a new design of my personal blog based on a medium style (thanks to [mediumish-theme-jekyll](https://github.com/wowthemesnet/mediumish-theme-jekyll) ). After more than a year with the previous design, I decided to make a renewal with a more modern style. Of course the blog will continue using Jekyll but includes some new functionalities:
