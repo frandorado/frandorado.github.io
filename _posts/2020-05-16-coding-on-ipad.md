@@ -26,7 +26,7 @@ heroku container:login
 ```
 docker pull doradofran/coder-heroku
 ```
-7. Tag push it to docker registry in Heroku
+7. Tag and push it to docker registry in Heroku
 ```
 docker tag doradofran/coder-heroku registry.heroku.com/vscode-test/web
 ``` 
