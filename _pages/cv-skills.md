@@ -22,7 +22,7 @@ permalink: /cv/skills
 * CI and QA
 	* **Tests**: JUnit, Cucumber, Testcontainers
 	* **QA and Performance**: Sonar, JMeter
-	* **CI and tools**: Jenkins, Docker
+	* **CI and tools**: Jenkins, Docker, Kubernetes
 	
 * Others
 	* **Project management** Maven

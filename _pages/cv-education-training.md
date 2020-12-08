@@ -24,7 +24,8 @@ permalink: /cv/education-training
 #### Training
 
 `2020`
-* **[Udemy]** Java Multithreading, Concurrency & Performance Optimization - Michael Pogrebinsky
+* **[Udemy]** "Kubernetes for the Absolute Beginners - Hands-on" - Mumshad Mannambeth
+* **[Udemy]** "Java Multithreading, Concurrency & Performance Optimization" - Michael Pogrebinsky
 * **[Sngular S.L]** OKR Champions
 * **[Book]** Software Architecture with Spring 5.0: Design and architect highly scalable, robust, and high-performance Java applications *By Rene Enrique, Alberto Salazar* (Packt)
 * **[Udemy]** Desarrollo seguro - Back
