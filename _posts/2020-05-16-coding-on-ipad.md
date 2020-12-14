@@ -6,7 +6,7 @@ categories: [cloud]
 tags: [coding, ipad, coder, cloud, coding, free, tablet, github, gitlab, codespaces, gitpod]
 image: assets/images/posts/2020-05-16/header.png
 toc: true
-hidden: true
+hidden: false
 ---
 
 Since iOS 13 added the possibility of using keyboard and mouse, the iPad has become a good device in which to do programming. This post pretends to give some options based on Visual Studio Code that allows us coding in our iPads or tablets.
