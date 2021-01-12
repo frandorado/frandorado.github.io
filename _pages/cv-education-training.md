@@ -23,6 +23,9 @@ permalink: /cv/education-training
 
 #### Training
 
+`2021`
+* **[Udemy]** "Complete Guide to Protocol Buffers 3" - Stephane Maarek
+
 `2020`
 * **[Udemy]** "Kubernetes for the Absolute Beginners - Hands-on" - Mumshad Mannambeth
 * **[Udemy]** "Java Multithreading, Concurrency & Performance Optimization" - Michael Pogrebinsky
