@@ -24,6 +24,7 @@ permalink: /cv/education-training
 #### Training
 
 `2021`
+* **[Udemy]** "gRPC Java Master Class" - Stephane Maarek
 * **[Udemy]** "Complete Guide to Protocol Buffers 3" - Stephane Maarek
 
 `2020`
