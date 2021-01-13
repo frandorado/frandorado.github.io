@@ -4,21 +4,22 @@ title: CV - Resume (Work Experience)
 permalink: /cv/work-experience
 ---
 
-`Mar 2018 - Present` __Reference Leader Software Developer__
+`Jan 2021 - Present` __Software Architect__
 * *Company*: Sngular, Seville (Spain)
-* *Role*: Software Architect
-* *Projects*: Project of banking sector in EEUU. Member of architecture team.
+* *Project*: Project for Hispasat
+
+`Mar 2018 - Dec 2020` __Software Architect__
+* *Company*: Sngular, Seville (Spain)
+* *Project*: Project for BBVA in USA. Member of Architecture Team
 * *Technologies*: Java, Spring, AWS(SNS, SQS), Docker, Consul, Zuul, MongoDB, Redis, ...
 
-`Oct 2016 - Mar 2018` __Team Leader Software Developer__
+`Oct 2016 - Mar 2018` __Team Leader__
 * *Company*: Sngular, Seville (Spain)
-* *Role*: Technical leader in a vertical team
-* *Projects*: Project of the bank sector in EEUU.
+* *Projects*: Project for BBVA in USA. Leader of Events Team
 * *Technologies*: Java, Spring, AWS(SNS, SQS), Docker, Consul, Zuul, MongoDB, Redis.
 
-`Dic 2015 - Oct 2016` __Java & IOS Developer__
+`Dic 2015 - Oct 2016` __Java & IOS Senior Developer__
 * *Company*: Soltel IT Software, Seville (Spain)
-* *Role*: Senior Developer
 * *Projects*: Internal Java Projects and Project for Santander Bank UK (Mobile app in IOS)
 * *Technologies*: Java, Spring, JBoss Seam, Hibernate, Objective-C, Swift.
 
@@ -30,7 +31,6 @@ permalink: /cv/work-experience
 
 `Sept 2010 - Sep 2013` __Java Developer__
 * *Company*: Ayesa, Seville (Spain)
-* *Role*: Java Developer
 * *Projects*: I+D projects and others Java projects.
 * *Technologies*: Java6, JSF2.0, Richfaces, EJB3, Hibernate, JPA, JBossSeam2, JBossAS
 Server 7, Maven 2, Ajax, Html, Css, JavaScript, JPDL, JBMP, ...
