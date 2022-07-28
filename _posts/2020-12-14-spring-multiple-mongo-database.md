@@ -6,7 +6,7 @@ categories: [spring]
 tags: [spring, boot, starter, data, mongo, multiple, database]
 image: assets/images/posts/2020-12-14/header.jpg
 toc: false
-hidden: true
+hidden: false
 ---
 
 In this post I am going to talk about how to configure multiple databases using Spring Boot Starter Data Mongo which is configured by default to support just one database.
